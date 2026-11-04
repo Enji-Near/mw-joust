@@ -1,0 +1,7 @@
+.pio/
+.vscode/
+__pycache__/
+CLAUDE.local.md
+# Raw overnight logs stay local; results get summarised in the README
+motor_bench_test/logs/*
+!motor_bench_test/logs/.gitkeep
