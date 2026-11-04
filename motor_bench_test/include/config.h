@@ -2,16 +2,18 @@
 #pragma once
 #include <Arduino.h>
 
-// --- N20 gearmotors: one DRV8833 module each. D3/D5/D9/D10 are PWM-capable. ---
-const uint8_t N20_1_IN1 = 9, N20_1_IN2 = 10, N20_1_ENC_A = 2, N20_1_ENC_B = 4;
-const uint8_t N20_2_IN1 = 3, N20_2_IN2 = 5,  N20_2_ENC_A = 7, N20_2_ENC_B = 8;
+// --- N20 gearmotors: one DRV8833 module each. ---
+// The Mega has external interrupts on only 2, 3, 18, 19, 20, 21. 20/21 are I2C, so the
+// four encoder channels take the other four. Motor inputs need PWM.
+const uint8_t N20_1_IN1 = 9, N20_1_IN2 = 10, N20_1_ENC_A = 2,  N20_1_ENC_B = 3;
+const uint8_t N20_2_IN1 = 5, N20_2_IN2 = 6,  N20_2_ENC_A = 18, N20_2_ENC_B = 19;
 
 // --- 8 mm steppers: one DRV8833 module each. Order: AIN1, AIN2, BIN1, BIN2. ---
-const uint8_t STEP_1_PINS[4] = {14, 15, 16, 17};  // A0-A3
-const uint8_t STEP_2_PINS[4] = {18, 19, 20, 21};  // A4-A7
+const uint8_t STEP_1_PINS[4] = {22, 23, 24, 25};
+const uint8_t STEP_2_PINS[4] = {26, 27, 28, 29};
 
 // Optional nFAULT inputs (open drain). Harmless if left unconnected.
-const uint8_t FAULT_N20_PIN = 6, FAULT_STEP_PIN = 11;
+const uint8_t FAULT_N20_PIN = 30, FAULT_STEP_PIN = 31;
 
 // --- Test timing ---
 const uint32_t MOVE_MS  = 1000;  // Each move takes this long.

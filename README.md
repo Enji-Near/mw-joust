@@ -4,7 +4,7 @@ Hardware notes and test firmware for the Joust motor retrofit.
 
 | Folder | Contents |
 | --- | --- |
-| [`motor_bench_test/`](motor_bench_test/) | Endurance test firmware and overnight logger (PlatformIO, Arduino Nano Every) |
+| [`motor_bench_test/`](motor_bench_test/) | Endurance test firmware and overnight logger (PlatformIO, Arduino Mega 2560) |
 | [`ref/`](ref/parts.md) | Parts list, datasheets, and which specs are confirmed |
 
 ## Motor bench test
@@ -23,38 +23,52 @@ Two N20 encoder gearmotors and two 8 mm steppers cycle between positions A and B
 ### Power
 
 ```
-12 V supply ──► Nano VIN          GND shared by everything
-Nano +5V ─────► VCC on all 4 DRV8833 modules
-Laptop USB ───► Nano (data)
+Separate 5 V supply (1 A+) ──► VCC on all 4 DRV8833 modules
+Laptop USB ──────────────────► Mega (power and data)
+Mega 5V pin ─────────────────► N20 encoder VCC only
+GND shared by everything
 ```
 
-> **Never put 12 V on a DRV8833 module.** Its absolute maximum is 11.8 V and its operating maximum is 10.8 V.
+- **Don't power the motors from the Mega's 5V pin.** Its linear regulator would have to drop 12 V to 5 V at about 555 mA, which is about 3.9 W of heat. The likely result is thermal resets, which is exactly what this test is trying to catch.
+- **Don't connect the 5 V supply to the Mega's 5V pin.** Only its GND joins the Mega.
+- **Add a 100 µF capacitor** across the motor 5 V rail, near the modules.
 
-The 12 V must stay connected, because USB alone can't carry the motors. Add a 100 µF capacitor across the 5 V rail near the modules so motor noise doesn't reset the board.
-
-| 5 V rail load | Current |
+| 5 V motor rail load | Current |
 | --- | --- |
 | Steppers: 2 × one coil × (5 V / 39.2 Ω) | 255 mA |
 | N20: 2 × 150 mA listed (at 6 V; stall current unknown) | 300 mA |
-| **Total, against 950 mA available** | **~555 mA** |
+| **Total** | **~555 mA** |
+
+### Stopping USB resets
+
+A Mega resets whenever the serial port opens. If the logger reconnects overnight, that would look like a real reset and cost us the position reference.
+
+**Fit a 10 µF capacitor between RESET and GND on the Mega (+ to RESET) before starting the test.** Remove it for uploads, or the upload will fail. The value comes from community reports rather than Arduino, so confirm it: restart the logger and check that no new `BOOT` line appears.
 
 ### Wiring
 
 Each motor gets its own DRV8833 module. Module pin names are read from a listing photo, so check them against the board.
 
-| Motor | Module pin | Nano pin |
+| Motor | Connection | Mega pin |
 | --- | --- | --- |
-| N20 1 | IN1 / IN2 | D9 / D10 |
-| N20 1 encoder | A / B | D2 / D4 |
-| N20 2 | IN1 / IN2 | D3 / D5 |
-| N20 2 encoder | A / B | D7 / D8 |
-| Stepper 1 | IN1 / IN2 / IN3 / IN4 | A0 / A1 / A2 / A3 |
-| Stepper 2 | IN1 / IN2 / IN3 / IN4 | A4 / A5 / A6 / A7 |
-| N20 modules, optional | ULT (nFAULT) | D6 |
-| Stepper modules, optional | ULT (nFAULT) | D11 |
+| N20 1 | Module IN1 / IN2 | D9 / D10 |
+| N20 1 encoder | C1 / C2 | D2 / D3 |
+| N20 2 | Module IN1 / IN2 | D5 / D6 |
+| N20 2 encoder | C1 / C2 | D18 / D19 |
+| Stepper 1 | Module IN1 / IN2 / IN3 / IN4 | D22 / D23 / D24 / D25 |
+| Stepper 2 | Module IN1 / IN2 / IN3 / IN4 | D26 / D27 / D28 / D29 |
+| N20 modules, optional | ULT (nFAULT) | D30 |
+| Stepper modules, optional | ULT (nFAULT) | D31 |
 
-- **N20 motor wires:** OUT1 / OUT2.
-- **N20 encoder power:** assumed 5 V from the Nano. The listing doesn't give the encoder pinout or voltage, so confirm before powering it.
+N20 harness, in connector order:
+
+| Wire | Red | Black | Yellow | Green | Blue | White |
+| --- | --- | --- | --- | --- | --- | --- |
+| Label | M2 | VCC | C2 | C1 | GND | M1 |
+| Goes to | Module OUT2 | Mega 5V | Encoder pin (C2) | Encoder pin (C1) | GND | Module OUT1 |
+
+> **Black is encoder power and blue is ground, so red and black are not power.** Red is a motor wire. Check with a meter before powering: M1–M2 should read as a motor winding, and VCC–GND should not be a short. The listing doesn't give the encoder's voltage, so 5 V is an assumption; check any marking on the encoder board.
+
 - **Stepper coils:** coil A on OUT1 / OUT2, coil B on OUT3 / OUT4. Confirm each pair reads about 39 Ω.
 - **EEP pin (nSLEEP):** the chip sleeps unless this is high. If the module's `J1` link isn't closed, tie EEP to 5 V.
 
@@ -63,17 +77,18 @@ Each motor gets its own DRV8833 module. Module pin names are read from a listing
 Commands below are sent from `motor_bench_test/`.
 
 ```bash
-pio run -t upload        # Flashing clears the saved cycle totals
+pio run -t upload        # Capacitor off. A new build ignores saved cycle totals.
 systemd-inhibit --what=sleep:idle:handle-lid-switch python3 tools/bench_logger.py
 ```
 
 1. **Stepper angle:** `echo "t 1 20" > logs/cmd` should turn the flag exactly once. Repeat with `t 2 20`.
 2. **N20 encoder:** `echo "c 1 60" > logs/cmd`, let it make whole turns, then `echo x > logs/cmd`. Set `N20_COUNTS_PER_REV` in `include/config.h` to counts ÷ turns, and re-flash. Repeat for motor 2. If it reports `ENCODER_REVERSED`, set `N20_x_ENC_INVERT`.
 3. **Check the stops:** send `b`, then `a`, and watch the steppers as they stop. If a flag moves when its coils release, set `STEPPER_TWO_COIL = true`.
-4. **Mark A:** send `z`, then mark all four flags.
-5. **Mark B:** send `b`, mark all four flags, then send `a`.
-6. **Start:** send `g`.
-7. **Heat check:** touch the steppers after 15 minutes. If they're too hot to hold, raise `DWELL_MS`.
+4. **Fit the RESET capacitor**, then restart the logger and confirm no new `BOOT` line appears.
+5. **Mark A:** send `z`, then mark all four flags.
+6. **Mark B:** send `b`, mark all four flags, then send `a`.
+7. **Start:** send `g`.
+8. **Heat check:** touch the steppers after 15 minutes. If they're too hot to hold, raise `DWELL_MS`.
 
 ### Commands
 
@@ -94,12 +109,18 @@ systemd-inhibit --what=sleep:idle:handle-lid-switch python3 tools/bench_logger.p
 python3 tools/bench_logger.py --summary logs/run-XXXX.log
 ```
 
-The log gives the total cycles, and the time and cause of each reset.
+The log gives the total cycles and the time of each reset. The Mega's bootloader hides the chip's reset flags, so the cause is best-effort:
+
+| `BOOT reset=` | Meaning |
+| --- | --- |
+| `WATCHDOG` | The firmware hung |
+| `WARM` | Reset button, USB, or a brief power dip |
+| `POWER_ON` | Power was lost |
 
 - **Trust the logger's total over the board's.** The board saves to EEPROM every 100 cycles, so it can lose up to 99 per reset. Its copy is the backup if the laptop drops out.
-- **A reset ends the drift measurement.** The board keeps cycling for wear data, but the encoders restart at zero and the stepper phase is lost. Drift can only be compared up to the first reset; the log records which cycle that was.
+- **A reset ends the drift measurement.** The board keeps cycling for wear data, but the encoders are incremental: they restart at zero with no memory of position, and the stepper phase is lost too. Drift can only be compared up to the first reset; the log records which cycle that was.
 - **`e1=` and `e2=` are encoder errors in counts**, listed as A/B. They show if an N20 is missing its target, but not gearbox slip or backlash. Only the flags show those, and only the flags can show stepper drift, since the steppers have no feedback.
 
 ### Status
 
-Firmware compiles and the logger passed against a simulated board. Neither has run on real hardware, so the N20 loop gains in `config.h` are untuned starting values.
+Firmware compiles for the Mega and the logger passed against a simulated board. Neither has run on real hardware, so the N20 loop gains in `config.h` are untuned and the `BOOT reset=` labels are unconfirmed.

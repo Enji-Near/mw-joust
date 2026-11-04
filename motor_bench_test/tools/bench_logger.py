@@ -20,7 +20,8 @@ import time
 import serial
 import serial.tools.list_ports
 
-NANO_EVERY_VID_PID = (0x2341, 0x0058)
+# Genuine Mega 2560s and the CH340 chip on most clones. Anything else: use --port.
+BOARD_VID_PIDS = {(0x2341, 0x0042), (0x2341, 0x0010), (0x2A03, 0x0042), (0x1A86, 0x7523)}
 BAUD = 115200
 STALE_SECONDS = 30  # One cycle is ~3 s, so 30 s of silence during a test means trouble.
 PROGRESS_SECONDS = 3600
@@ -38,7 +39,7 @@ def emit(text):
 
 def find_port():
     for p in serial.tools.list_ports.comports():
-        if (p.vid, p.pid) == NANO_EVERY_VID_PID:
+        if (p.vid, p.pid) in BOARD_VID_PIDS:
             return p.device
     return None
 
@@ -48,7 +49,8 @@ def open_port(path):
     ser.port = path
     ser.baudrate = BAUD
     ser.timeout = 0.2
-    # Hold the control lines low so that connecting can't be what resets the board.
+    # Reduces, but can't eliminate, the DTR pulse that resets a Mega when the port opens.
+    # Only the capacitor on RESET stops it fully (see README).
     ser.dtr = False
     ser.rts = False
     ser.open()
@@ -131,7 +133,7 @@ def run(port_arg, log_path):
                 path = port_arg or find_port()
                 try:
                     if not path:
-                        raise OSError("no Nano Every found")
+                        raise OSError("no Mega found")
                     ser = open_port(path)
                     emit(f"CONNECTED {path}")
                     log.write(f"{now_iso()} # CONNECTED {path}\n")
@@ -183,7 +185,7 @@ def run(port_arg, log_path):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--port", help="serial port (default: find the Nano Every by USB ID)")
+    ap.add_argument("--port", help="serial port (default: find the Mega by USB ID)")
     ap.add_argument("--log", help="log file (default: logs/run-<timestamp>.log)")
     ap.add_argument("--summary", metavar="LOG", help="print totals from a log and exit")
     args = ap.parse_args()

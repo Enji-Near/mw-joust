@@ -3,6 +3,7 @@
 // to stop, and reports cycle counts and resets over serial. tools/bench_logger.py records it.
 #include <Arduino.h>
 #include <EEPROM.h>
+#include <avr/wdt.h>
 #include "config.h"
 
 // ---------- N20 gearmotors ----------
@@ -106,6 +107,8 @@ void stepOnce(Stepper &s, int8_t dir) {
 
 // ---------- Persistence ----------
 // A ring of slots spreads wear and means a reset during a write loses only that one slot.
+// The Mega keeps EEPROM across uploads, so the checksum is seeded with the build time:
+// a new build ignores old totals instead of resuming a previous test the moment it's flashed.
 struct Checkpoint {
   uint32_t seq;
   uint32_t total;
@@ -113,7 +116,7 @@ struct Checkpoint {
   uint8_t running;
   uint8_t check;
 };
-const uint8_t SLOT_COUNT = EEPROM_SIZE / sizeof(Checkpoint);
+const uint8_t SLOT_COUNT = 16;
 
 uint32_t seqCounter = 0;
 uint8_t nextSlot = 0;
@@ -125,6 +128,7 @@ bool testActive = false;
 uint8_t checksum(const Checkpoint &c) {
   const uint8_t *p = reinterpret_cast<const uint8_t *>(&c);
   uint8_t sum = 0x5A;
+  for (const char *b = __DATE__ __TIME__; *b; b++) sum = (sum ^ *b) + 1;
   for (uint8_t i = 0; i < sizeof(Checkpoint) - 1; i++) sum = (sum ^ p[i]) + 1;
   return sum;
 }
@@ -438,14 +442,30 @@ void pollFaults() {
   prevFaultStep = f;
 }
 
-void printResetCause(uint8_t flags) {
+// The Mega's bootloader clears MCUSR before the sketch starts, so the chip can't report why it
+// reset. These survive a reset but not a power loss, which gives a best-effort answer.
+const uint16_t RAM_MARKER = 0xB007;
+uint16_t warmMarker __attribute__((section(".noinit")));
+uint16_t watchdogMarker __attribute__((section(".noinit")));
+
+// Interrupt + reset mode: this runs on the first timeout, the reset comes on the next one.
+ISR(WDT_vect) { watchdogMarker = RAM_MARKER; }
+
+void startWatchdog() {
+  cli();
+  wdt_reset();
+  WDTCSR |= _BV(WDCE) | _BV(WDE);
+  WDTCSR = _BV(WDIE) | _BV(WDE) | _BV(WDP2) | _BV(WDP1) | _BV(WDP0);  // ~2 s
+  sei();
+}
+
+void printResetCause() {
   Serial.print(F("BOOT reset="));
-  if (flags & RSTCTRL_PORF_bm) Serial.print(F("POWER_ON,"));
-  if (flags & RSTCTRL_BORF_bm) Serial.print(F("BROWNOUT,"));
-  if (flags & RSTCTRL_EXTRF_bm) Serial.print(F("BUTTON,"));
-  if (flags & RSTCTRL_WDRF_bm) Serial.print(F("WATCHDOG,"));
-  if (flags & RSTCTRL_SWRF_bm) Serial.print(F("SOFTWARE,"));
-  if (flags & RSTCTRL_UPDIRF_bm) Serial.print(F("UPLOAD,"));
+  if (watchdogMarker == RAM_MARKER) Serial.print(F("WATCHDOG"));
+  else if (warmMarker == RAM_MARKER) Serial.print(F("WARM"));  // Button, USB/DTR, or a dip
+  else Serial.print(F("POWER_ON"));
+  watchdogMarker = 0;
+  warmMarker = RAM_MARKER;
   Serial.print(F(" total="));
   Serial.print(totalCycles);
   Serial.print(F(" resets="));
@@ -455,10 +475,7 @@ void printResetCause(uint8_t flags) {
 }
 
 void setup() {
-  // Flags persist until cleared, so read and clear before anything else.
-  uint8_t resetFlags = RSTCTRL.RSTFR;
-  RSTCTRL.RSTFR = resetFlags;
-
+  wdt_disable();  // A watchdog reset leaves it running; setup's delays could trip it.
   Serial.begin(SERIAL_BAUD);
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(FAULT_N20_PIN, INPUT_PULLUP);
@@ -483,7 +500,7 @@ void setup() {
     resetCount++;
     saveCheckpoint();
   }
-  printResetCause(resetFlags);
+  printResetCause();
 
   // The rotor can rest at any detent, so pull it onto phase 0 now. Otherwise this
   // snap would happen on the first move, after the flag had been marked.
@@ -500,12 +517,11 @@ void setup() {
     printHelp();
   }
 
-  // Started last so the setup delays can't trip it. ~2 s (ATmega4809 2KCLK period).
-  _PROTECTED_WRITE(WDT.CTRLA, WDT_PERIOD_2KCLK_gc);
+  startWatchdog();  // Last, so the setup delays can't trip it.
 }
 
 void loop() {
-  __asm__ __volatile__("wdr");
+  wdt_reset();
   uint32_t now = millis();
   pollSerial();
   pollFaults();

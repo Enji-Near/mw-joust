@@ -1,6 +1,6 @@
 # Parts
 
-Official datasheets exist only for the driver chip and the Nano. The two motors are marketplace parts: no manufacturer datasheet was found, so their only source is the seller listing.
+Official datasheets exist only for the driver chip and the Arduino boards. The two motors are marketplace parts: no manufacturer datasheet was found, so their only source is the seller listing.
 
 ## DRV8833 driver module (Podazz, 8 pcs)
 
@@ -31,7 +31,11 @@ Source: seller listing only.
 | Output shaft | 3 mm dia, 10 mm long, D-type |
 | Size | 40.5 × 12 × 10 mm |
 
-**Not listed:** encoder type, resolution, voltage, wire pinout, stall current.
+**Not listed:** encoder type, resolution, voltage, stall current.
+
+Wire labels, read from the motors in connector order: red M2, black VCC, yellow C2, green C1, blue GND, white M1.
+
+The encoder is incremental: it counts movement and has no absolute position. The count is lost at power-off, so anything needing absolute position must home against a reference such as a limit switch.
 
 ## 8 mm micro stepper (Abovehill, ASIN B08346RFVZ)
 
@@ -55,7 +59,20 @@ Source: seller listing only.
 - **Colour note:** the listing labels both yellow and green as B− on the short-shaft version, which can't be right. Yellow as A− is an inference, so confirm the pairs with a meter.
 - **Step angle isn't listed.** 18° is assumed because similar 8 mm motors use it. Confirm with the `t 1 20` bench command.
 
-## Arduino Nano Every (ABX00028)
+## Arduino Mega 2560 Rev3 (A000067): bench test board
+
+Datasheet: [Arduino user manual](datasheets/Arduino_Mega_2560_Rev3_A000067.pdf) ([source](https://docs.arduino.cc/resources/datasheets/A000067-datasheet.pdf))
+
+| Spec | Value | Source |
+| --- | --- | --- |
+| VIN | 7–12 V | §2.1 |
+| 5 V regulator | SPX1117 linear, 750 mA | §3.4 |
+| EEPROM | 4 KB | Features |
+| External interrupts | D2, D3, D18–D21 | Core `pins_arduino.h` |
+| PWM | D2–D13, D44–D46 | Core `pins_arduino.h` |
+| Reset flags | Cleared by the bootloader before the sketch runs | `stk500boot.c` |
+
+## Arduino Nano Every (ABX00028): first choice, not used
 
 Datasheet: [Arduino user manual](datasheets/Arduino_Nano_Every_ABX00028.pdf) ([source](https://docs.arduino.cc/resources/datasheets/ABX00028-datasheet.pdf))
 
