@@ -9,7 +9,7 @@ Hardware notes and test firmware for the Joust motor retrofit.
 
 ## Motor bench test
 
-Two N20 encoder gearmotors and two 8 mm steppers cycle between positions A and B until stopped. Flags on the shafts are compared against marks on a backdrop to measure position drift.
+Two N20 encoder gearmotors and two optional 8 mm steppers cycle between positions A and B until stopped. Flags on the shafts are compared against marks on a backdrop to measure position drift.
 
 | | |
 | --- | --- |
@@ -29,8 +29,8 @@ Mega 5V pin ─────────────────► N20 encoder V
 GND shared by everything
 ```
 
-- **Don't power the motors from the Mega's 5V pin.** Its linear regulator would have to drop 12 V to 5 V at about 555 mA, which is about 3.9 W of heat. The likely result is thermal resets, which is exactly what this test is trying to catch.
-- **Don't connect the 5 V supply to the Mega's 5V pin.** Only its GND joins the Mega.
+- **Don't power the motors from the Mega's 5V pin.** On USB that rail has about 500 mA to share with the Mega itself, and N20 stall current is unknown. An overload could reset the board, which is exactly what this test is trying to catch.
+- **Don't connect the 5 V supply to the Mega's 5V pin.** Only its GND joins the Mega. A spare USB charger works as the supply.
 - **Add a 100 µF capacitor** across the motor 5 V rail, near the modules.
 
 | 5 V motor rail load | Current |
@@ -60,14 +60,14 @@ Each motor gets its own DRV8833 module. Module pin names are read from a listing
 | N20 modules, optional | ULT (nFAULT) | D30 |
 | Stepper modules, optional | ULT (nFAULT) | D31 |
 
-N20 harness, in connector order:
+N20 harness, in connector order. C1 and C2 go directly to the Mega, not through the driver module:
 
 | Wire | Red | Black | Yellow | Green | Blue | White |
 | --- | --- | --- | --- | --- | --- | --- |
 | Label | M2 | VCC | C2 | C1 | GND | M1 |
-| Goes to | Module OUT2 | Mega 5V | Encoder pin (C2) | Encoder pin (C1) | GND | Module OUT1 |
+| Goes to | Module OUT2 | Mega 5V | Mega D3 (motor 2: D19) | Mega D2 (motor 2: D18) | Mega GND | Module OUT1 |
 
-> **Black is encoder power and blue is ground, so red and black are not power.** Red is a motor wire. Check with a meter before powering: M1–M2 should read as a motor winding, and VCC–GND should not be a short. The listing doesn't give the encoder's voltage, so 5 V is an assumption; check any marking on the encoder board.
+> **Black is encoder power and blue is ground, so red and black are not power.** Red is a motor wire. Check with a meter before powering: M1–M2 should read as a motor winding, and VCC–GND should not be a short. The listing doesn't give the encoder's voltage. 5 V is based on a similar N20 that lists the same pinout and 3.3 V or 5 V.
 
 - **Stepper coils:** coil A on OUT1 / OUT2, coil B on OUT3 / OUT4. Confirm each pair reads about 39 Ω.
 - **EEP pin (nSLEEP):** the chip sleeps unless this is high. If the module's `J1` link isn't closed, tie EEP to 5 V.
