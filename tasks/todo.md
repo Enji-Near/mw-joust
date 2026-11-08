@@ -23,11 +23,12 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 ### H3: Power inputs
 - [x] Measure each supply's current over a full show (meter in series on the 10 A range, or an inline DC power meter). Record the highest steady reading. The chain motor's running current also sizes the DRV8871. ✅ 2026-11-07
 - [x] Q: shield motor supply voltage. ✅ 2026-11-07
-- [ ] Merge to one 12 V supply (owner decision). Shield Vin jumper must stay OFF while the Mega is on USB (check the shield).
+- [ ] Merge to one 12 V supply (owner decision).
+- [x] Shield VIN disconnected, Mega on USB (owner). ✅ 2026-11-08
 - [ ] Measure the combined current over a full show on the single supply; 3 A time-lag fuse at its + output if the highest steady reading stays under about 2 A (else size up, within the supply's and wire's rating).
 - [ ] At the supply input (before the motor-power relay): 330 uF + 0.1 uF ceramic. At the shield motor terminal and the DRV8871 VM (after the relay): 100 uF + 0.1 uF. Electrolytics 25 V or higher, low-ESR, polarity observed, leads short.
 - [ ] Motor-power cut-off relay (ADR-011): one relay in the single supply's + line after the fuse. 2-relay board as placeholder, then a single-relay board. Contacts rated above 3 A at 12 V DC. Bench check: module powered, input pin left floating -> relay must stay OFF.
-- [ ] Q: when a lance is up and its motor is released (coasting), does the bolt stay on the up post, or can it sag off?
+- [x] Q: does the bolt stay on the up post when released? Owner: it should, but it's a threaded bolt on a single header pin and can shift slightly. ✅ 2026-11-08
 
 ## Phase 1: Foundation
 
@@ -85,8 +86,8 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 **Description:** Lock/key, safe-op jumper, auto-home (all original cases), joust sequence, random winner (seeded), stats. Constant speed (decel off) so it matches today's motion. Old bugs fixed (lance cutoff stops motor, `check_Safe_Operation` CW/CCW typo at old line 1372, chain confirm re-read hang at old lines 582-608, 16-bit `int` millis timers). ADR-010 persistent lockout, ADR-011 motor-power relay, calibration source (EEPROM or config.h) printed at boot.
 **Acceptance criteria:**
 - [ ] Every row of the operations manual behaviour table has a matching step.
-- [ ] Any fault locks the show at once, no retries. Start button: lance fault 500 ms on / 500 ms off; any other fault 2000 / 2000. Fault detail (knight, lance/axis, switch, cause) printed on serial for remote access.
-- [ ] Unattended (safe-op boot): never move a lance that isn't resting on a post; lock instead.
+- [ ] A failed move locks the show at once, no retries (lance contact lost at rest is NOT a fault). Start button: lance fault 500 ms on / 500 ms off; any other fault 2000 / 2000. Fault detail (knight, lance/axis, switch, cause) printed on serial for remote access.
+- [ ] Last known lance position kept in EEPROM (ADR-013): a lance never moves toward the post it is recorded at; at boot, a lance with no switch closed takes its position from the record; wear-levelled, non-blocking writes.
 - [ ] Lock: all motors stop, motor power off, fault saved; after a power cycle still locked and showing the fault; unlock needs a key lock -> unlock change; safe-op does not bypass it.
 - [ ] No `delay()` in the live loop; watchdog fed only from loop(); `AFMS.begin()` first in setup.
 - [ ] Reset cause (`.noinit` marker, as in `motor_bench_test`) and fault/run counters kept in EEPROM and printed at boot.
