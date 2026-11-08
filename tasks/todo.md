@@ -22,14 +22,12 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 
 ### H3: Power inputs
 - [x] Measure each supply's current over a full show (meter in series on the 10 A range, or an inline DC power meter). Record the highest steady reading. The chain motor's running current also sizes the DRV8871. ✅ 2026-11-07
-- [ ] Fuse each 12 V supply at its + output, first thing after the supply: 3 A time-lag (legacy value), lower if a supply or its wire is rated below 3 A.
-- [ ] At each supply input (before the motor-power relay): 330 uF + 0.1 uF ceramic. At the shield motor terminal and the DRV8871 VM (after the relay): 100 uF + 0.1 uF. Electrolytics 25 V or higher, low-ESR, polarity observed, leads short.
-- [ ] Motor-power cut-off relay (ADR-011): 2-relay board as placeholder, then a single-relay board. Contacts rated above 3 A at 12 V DC. Bench check: module powered, input pin left floating -> relay must stay OFF.
-
-### H4: Fault indicator (ADR-012)
-- [ ] Choose NeoPixel strip (11+ pixels) or discrete LEDs; choose where staff will see it.
-- [ ] NeoPixel wiring: 5 V + GND from a supply that can carry it (brightness capped in firmware), about 470 ohm in series on the data line, 470-1000 uF across the strip's power at the strip (Adafruit NeoPixel guide).
 - [x] Q: shield motor supply voltage. ✅ 2026-11-07
+- [ ] Merge to one 12 V supply (owner decision). Shield Vin jumper must stay OFF while the Mega is on USB (check the shield).
+- [ ] Measure the combined current over a full show on the single supply; 3 A time-lag fuse at its + output if the highest steady reading stays under about 2 A (else size up, within the supply's and wire's rating).
+- [ ] At the supply input (before the motor-power relay): 330 uF + 0.1 uF ceramic. At the shield motor terminal and the DRV8871 VM (after the relay): 100 uF + 0.1 uF. Electrolytics 25 V or higher, low-ESR, polarity observed, leads short.
+- [ ] Motor-power cut-off relay (ADR-011): one relay in the single supply's + line after the fuse. 2-relay board as placeholder, then a single-relay board. Contacts rated above 3 A at 12 V DC. Bench check: module powered, input pin left floating -> relay must stay OFF.
+- [ ] Q: when a lance is up and its motor is released (coasting), does the bolt stay on the up post, or can it sag off?
 
 ## Phase 1: Foundation
 
@@ -58,7 +56,7 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 
 ### Checkpoint A
 - [x] All native tests pass (32); both Mega envs build with no warnings; flash/RAM reported.
-- [ ] Owner reviews the Axis interface (`firmware/lib/motion/src/axis.h`) before any hardware code.
+- [x] Axis interface review: owner delegated to tests (2026-11-07). ✅ 2026-11-07
 
 ## Phase 2: Bench firmware
 
@@ -87,7 +85,8 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 **Description:** Lock/key, safe-op jumper, auto-home (all original cases), joust sequence, random winner (seeded), stats. Constant speed (decel off) so it matches today's motion. Old bugs fixed (lance cutoff stops motor, `check_Safe_Operation` CW/CCW typo at old line 1372, chain confirm re-read hang at old lines 582-608, 16-bit `int` millis timers). ADR-010 persistent lockout, ADR-011 motor-power relay, calibration source (EEPROM or config.h) printed at boot.
 **Acceptance criteria:**
 - [ ] Every row of the operations manual behaviour table has a matching step.
-- [ ] Lance fault: indicator shows the switch, lance recovers to its origin, show continues; failed recovery or 3 in a row locks. Rotation/chain fault: locks at once.
+- [ ] Any fault locks the show at once, no retries. Start button: lance fault 500 ms on / 500 ms off; any other fault 2000 / 2000. Fault detail (knight, lance/axis, switch, cause) printed on serial for remote access.
+- [ ] Unattended (safe-op boot): never move a lance that isn't resting on a post; lock instead.
 - [ ] Lock: all motors stop, motor power off, fault saved; after a power cycle still locked and showing the fault; unlock needs a key lock -> unlock change; safe-op does not bypass it.
 - [ ] No `delay()` in the live loop; watchdog fed only from loop(); `AFMS.begin()` first in setup.
 - [ ] Reset cause (`.noinit` marker, as in `motor_bench_test`) and fault/run counters kept in EEPROM and printed at boot.

@@ -14,7 +14,7 @@ Before drawing, ask the owner which format they want. Options:
 1. `CLAUDE.md` (project rules: public repo, commit and push every turn on branch `firmware-v2`, cite datasheets, never invent hardware facts).
 2. `firmware/include/config.h`: **the source of truth for pins.** If the diagram needs a pin change, change config.h and run `pio run -e joust -e bench` from `firmware/`.
 3. `tasks/plan.md`: ADR-007 (DRV8871), ADR-010 (fault policy), ADR-011 (motor-power relay), ADR-012 (indicator), and the Power paragraph.
-4. `tasks/todo.md` H1-H4: hardware changes in progress (the owner ticks items there; re-read before editing).
+4. `tasks/todo.md` H1-H3: hardware changes in progress (the owner ticks items there; re-read before editing).
 5. v1 reference: `2025_04_02_Joust_Deployment_NRG/*.ino` and `Electronics Pinout.xlsx` (the owner's v1 pinout; reading it needs `openpyxl`, or ask the owner for a CSV export).
 
 ## System as known (2026-11-07)
@@ -22,10 +22,11 @@ Before drawing, ask the owner which format they want. Options:
 **Controller:** Arduino Mega 2560, with an Adafruit Motor Shield V2 stacked on top (it covers the Mega and its LEDs).
 
 **Power:**
-- Two separate 12 V supplies: #1 feeds the shield's motor terminal, #2 feeds the chain drive. They were split in v1 to keep chain motor noise off the shield, and stay split for now.
-- Fuse each supply at its + output: 3 A time-lag (the legacy value).
-- Caps: 330 uF + 0.1 uF at each supply input, before the relay. 100 uF + 0.1 uF at the shield motor terminal and at the DRV8871 VM, after the relay. Electrolytics rated 25 V or higher.
+- One 12 V supply for the shield's motor terminal and the chain drive. This merges the two v1 supplies (owner, 2026-11-07); Task 5 noise data confirms it.
+- 3 A time-lag fuse at the supply + output, then the motor-power relay (D22), then the loads.
+- Caps: 330 uF + 0.1 uF at the supply input, before the relay. 100 uF + 0.1 uF at the shield motor terminal and at the DRV8871 VM, after the relay. Electrolytics rated 25 V or higher.
 - 0.1 uF ceramic directly across each motor's terminals. **Never an electrolytic across a motor.** Motor leads twisted.
+- The Mega is powered over USB. The shield's Vin jumper must be OFF, so 12 V never reaches the Mega's VIN.
 - All grounds meet at one point. The DRV8871 inputs are referenced to Mega GND.
 
 **Motors (all 12 V DC):**
@@ -56,9 +57,8 @@ Before drawing, ask the owner which format they want. Options:
 - Control panel: A2 both rotate CW, A3 both rotate CCW, A10 chain CW, A11 chain CCW. Both lances up and down move from A4/A5 (removed) to D23 and D24 (tentative).
 
 **Outputs:**
-- D13: onboard LED. v1 code calls it the start-button LED. Ask whether an external LED is wired to it.
-- D22: motor-power cut-off relay (tentative). 2-relay board as a placeholder, then a single-relay board. The relay must be OFF while the pin floats (reset, upload).
-- D25: fault indicator, NeoPixel strip (proposed, owner undecided): 11+ pixels, about 470 ohm in series on the data line, 470-1000 uF across the strip's 5 V at the strip (Adafruit NeoPixel Uberguide). Brightness is capped in firmware.
+- D13: start-button LED (v1 drives it as LED_BUILTIN). It is the only indicator: lance fault 500/500 ms, other fault 2000/2000 ms. Confirm with the owner how the start button's LED is wired to D13.
+- D22: motor-power cut-off relay (tentative), one relay in the 12 V + line. 2-relay board as a placeholder, then a single-relay board. The relay must be OFF while the pin floats (reset, upload).
 
 **Reserved pins:** don't assign these.
 - D0/D1: USB serial.
@@ -72,17 +72,10 @@ Before drawing, ask the owner which format they want. Options:
 - The ESP32 is 3.3 V, so the link needs a level shifter. Mega 5 V into an ESP32 pin is over its rating. 3.3 V into the Mega is marginal: check VIH in the ATmega2560 datasheet's DC characteristics. Mark it as future work on the diagram.
 
 ## Open items to ask the owner (don't guess)
-1. **Motor-power relay with two supplies:** one relay contact cuts one supply. Options:
-   - use both channels of the 2-relay board, both driven from D22;
-   - a DPDT relay;
-   - cut only the shield supply and rely on the DRV8871 inputs going low (coast) at reset.
-
-   Present the trade-off and let the owner choose.
-2. Which supply powers the Mega itself (USB, barrel jack, or VIN from a 12 V supply)?
-3. The current rating of each 12 V supply, and the wire gauges in use.
-4. Where the panel, key, start button and indicator physically sit, and which connectors or terminals each harness uses.
-5. Whether the shield ties A4/A5 to SDA/SCL. The v1 code says so; it's unverified on the Mega. Owner check, with power off: continuity between the shield's A4 and SDA pins.
-6. Indicator: NeoPixel or discrete LEDs, and where staff will see it.
+1. The 12 V supply's current rating, and the wire gauges in use.
+2. Where the panel, key and start button physically sit, and which connectors or terminals each harness uses.
+3. Whether the shield ties A4/A5 to SDA/SCL. The v1 code says so; it's unverified on the Mega. Owner check, with power off: continuity between the shield's A4 and SDA pins.
+4. Where the motor-power relay board mounts, and its input wiring (most 2-relay boards are active LOW).
 
 ## Done when
 - The diagram shows every pin in `config.h` and every item above, with unknowns marked "unknown" or "TBD".

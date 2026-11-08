@@ -37,8 +37,11 @@ const uint8_t PIN_PANEL_LANCES_DOWN = 24;   // was A5
 // ---------------------------------------------------------------- Outputs
 const uint8_t PIN_LED = 13;             // onboard LED, mirrors the start-button LED
 
-// Fault indicator (proposed): NeoPixel strip, one pixel per limit switch + status. Tentative pin.
-const uint8_t PIN_STATUS_PIXELS = 25;
+// Start-button blink patterns, ms on = ms off (ADR-012).
+const uint16_t BLINK_LANCE_FAULT_MS = 500;
+const uint16_t BLINK_OTHER_FAULT_MS = 2000;
+const uint16_t BLINK_LOCKED_MS      = 3000;   // waiting for key (v1 behaviour)
+const uint16_t BLINK_MANUAL_MS      = 1000;   // manual mode (v1 behaviour)
 
 // Chain drive relays, active LOW. Replaced by the DRV8871 in Task 9.
 const uint8_t PIN_CHAIN_RELAY_CCW = A0;
@@ -46,7 +49,7 @@ const uint8_t PIN_CHAIN_RELAY_CW  = A1;
 const uint8_t RELAY_ON_LEVEL      = LOW;
 const uint8_t RELAY_OFF_LEVEL     = HIGH;
 
-// Motor-power cut-off (ADR-011). 2-relay board as placeholder, then a single-relay board.
+// Motor-power cut-off (ADR-011), in the single 12 V supply's + line. 2-relay board as placeholder.
 // Must be OFF while the pin floats (reset, bootloader, upload).
 const uint8_t PIN_MOTOR_POWER = 22;
 

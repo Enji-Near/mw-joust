@@ -9,7 +9,8 @@
 - Board: Arduino Mega 2560. Flash 256 KB, SRAM 8 KB, EEPROM 4 KB (ATmega2560 datasheet).
 - Adafruit Motor Shield V2 (PCA9685 + TB6612, I2C 0x60): M1 K1 lance, M2 K1 rotate, M3 K2 lance, M4 K2 rotate. Library 1.1.4: no BRAKE, RELEASE = coast.
 - Chain drive: two relays (A0 CCW, A1 CW, active LOW) today; DRV8871 on D44/D45 planned (Task 9).
-- Power: two separate 12 V supplies (shield, chain). Legacy fuse: 3 A (bypassed; type assumed time-lag).
+- Power: merging to one 12 V supply (shield + chain), one 3 A time-lag fuse, one motor-power relay. Mega on USB.
+- Indicator: start-button LED only. Lance fault 500/500 ms, other fault 2000/2000 ms.
 - All motors 12 V. Chain at full 12 V; lance and rotate PWM'd down (old duties 800 and 2400 of 4095).
 - Limit switches: bolt on the axle touching a post on a small PCB, bolt grounded through a brush. Fragile, the post is also the hard stop. All inputs to GND with pull-up, active LOW.
 - Pins: all in `firmware/include/config.h`. Control panel (manual mode) kept until v2 is proven; its both-lances buttons move off A4/A5 to D23/D24 (tentative).
