@@ -27,17 +27,20 @@ Start the session in the Joust repo and say: "Read `docs/handoff-next-session.md
   - Mega on USB; shield VIN disconnected.
 - **Control panel:** kept. The both-lances buttons move from A4/A5 (removed) to D23/D24 (tentative).
 - **Faults (ADR-010):**
-  - A failed move locks the show at once, with no retries.
+  - A failed move on any axis (lance, knight rotation, chain drive) locks the show at once, with no retries.
   - The lock survives a power cycle. Key lock -> unlock clears it; safe-op does not bypass it.
   - The start button is the only indicator: lance fault 500/500 ms, other fault 2000/2000 ms.
   - A lance that has merely lost contact at rest is not a fault.
 - **Last known lance position (ADR-013):** stored in EEPROM. A lance is never driven toward the post it is recorded at, and at boot the record stands in for an unread switch.
 - **Calibration:** `config.h` defaults, plus an optional copy saved to EEPROM by the bench firmware.
 
-## Open questions for the owner
-1. ADR-013 refinement: also record MOVING_TO_x at move start, so a mid-move power cut is recognised. OK?
-2. A lance with no record and no switch closed (first boot only): lock and let the operator use the panel. OK?
-3. Any measured current numbers: the merged-supply total, and the chain motor running current. The Adafruit DRV8871 board limits current at about 2.1 A.
+## Open questions for the owner (ask these first)
+1. **EEPROM wear, the first item to settle:** does ADR-013 survive? See plan.md Open questions 1 for the numbers. The owner wants it cut if there is any real chance of wear-out over 5+ years at hundreds of lance moves a day. Ask how many shows run per day.
+2. ADR-013 refinement: also record MOVING_TO_x at move start, so a mid-move power cut is recognised. OK?
+3. Boot probe (owner decision, 2026-11-08):
+   - when no lance switch reads closed at boot and no failure lock is saved, back off the assumed start post slightly, then return; this should close a limit;
+   - open: how far to back off, and whether the probe runs in unattended safe-op boot.
+4. Any measured current numbers: the merged-supply total, and the chain motor running current. The Adafruit DRV8871 board limits current at about 2.1 A.
 
 ## Next: Task 5 (bench firmware), then Task 6 (calibration)
 - `ShieldDriver` (ADR-009): Wire timeout checked after every write, 400 kHz.
