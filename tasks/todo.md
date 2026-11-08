@@ -17,13 +17,18 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 - [ ] Repair damaged signal lines
 - [x] re-solder the broken post. ✅ 2026-11-07
 - [ ] Meter check each lance switch from the Mega pin to GND: open with lance mid-travel, near 0 ohm when the bolt rests on the post (rotate the axle slightly: the reading should stay low through the brush).
-- [ ] Disconnect the retired panel's A4/A5 buttons (they share the shield's I2C lines).
+- [x] Remove the panel's A4/A5 buttons (they may share the shield's I2C lines). ✅ 2026-11-07
+- [ ] Rewire Both-Lances-Up / Down to D23 / D24 (tentative, see wiring diagram).
 
 ### H3: Power inputs
 - [x] Measure each supply's current over a full show (meter in series on the 10 A range, or an inline DC power meter). Record the highest steady reading. The chain motor's running current also sizes the DRV8871. ✅ 2026-11-07
-- [ ] Fuse each supply at its + output, first thing after the supply: time-lag, about 1.5-2x the highest steady current, and no higher than the supply's rating or the wire's rating.
-- [ ] 100 uF (25 V or higher, low-ESR) + 0.1 uF ceramic across each supply at the board's screw terminal, polarity observed, leads short.
-- [ ] Motor-power cut-off relay (ADR-011): contacts rated above the fuse at 12 V DC, coil driven by a module whose relay is OFF when its input pin floats. Bring the part to the bench before Task 7.
+- [ ] Fuse each 12 V supply at its + output, first thing after the supply: 3 A time-lag (legacy value), lower if a supply or its wire is rated below 3 A.
+- [ ] At each supply input (before the motor-power relay): 330 uF + 0.1 uF ceramic. At the shield motor terminal and the DRV8871 VM (after the relay): 100 uF + 0.1 uF. Electrolytics 25 V or higher, low-ESR, polarity observed, leads short.
+- [ ] Motor-power cut-off relay (ADR-011): 2-relay board as placeholder, then a single-relay board. Contacts rated above 3 A at 12 V DC. Bench check: module powered, input pin left floating -> relay must stay OFF.
+
+### H4: Fault indicator (ADR-012)
+- [ ] Choose NeoPixel strip (11+ pixels) or discrete LEDs; choose where staff will see it.
+- [ ] NeoPixel wiring: 5 V + GND from a supply that can carry it (brightness capped in firmware), about 470 ohm in series on the data line, 470-1000 uF across the strip's power at the strip (Adafruit NeoPixel guide).
 - [x] Q: shield motor supply voltage. ✅ 2026-11-07
 
 ## Phase 1: Foundation
@@ -81,8 +86,9 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 ### Task 7: Port the show
 **Description:** Lock/key, safe-op jumper, auto-home (all original cases), joust sequence, random winner (seeded), stats. Constant speed (decel off) so it matches today's motion. Old bugs fixed (lance cutoff stops motor, `check_Safe_Operation` CW/CCW typo at old line 1372, chain confirm re-read hang at old lines 582-608, 16-bit `int` millis timers). ADR-010 persistent lockout, ADR-011 motor-power relay, calibration source (EEPROM or config.h) printed at boot.
 **Acceptance criteria:**
-- [ ] Every row of the operations manual behaviour table has a matching step, or is listed as retired (manual mode).
-- [ ] Any axis fault: all motors stop, motor power off, fault saved; after a power cycle the show is still locked and shows the fault; unlock needs a key lock -> unlock change; safe-op does not bypass it.
+- [ ] Every row of the operations manual behaviour table has a matching step.
+- [ ] Lance fault: indicator shows the switch, lance recovers to its origin, show continues; failed recovery or 3 in a row locks. Rotation/chain fault: locks at once.
+- [ ] Lock: all motors stop, motor power off, fault saved; after a power cycle still locked and showing the fault; unlock needs a key lock -> unlock change; safe-op does not bypass it.
 - [ ] No `delay()` in the live loop; watchdog fed only from loop(); `AFMS.begin()` first in setup.
 - [ ] Reset cause (`.noinit` marker, as in `motor_bench_test`) and fault/run counters kept in EEPROM and printed at boot.
 **Verification:** build; dry run with motors unpowered (switches pressed by hand); then owner-approved run. **Dependencies:** 5, H3 relay. **Scope:** M-L (split home/show if it grows)
@@ -95,10 +101,10 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 
 ### Task 9: Chain drive DRV8871
 **Description:** `Drv8871Driver` on D44/D45, Timer5 PWM above hearing; stop = brake (both inputs high); start at full duty to match relay timing, then calibrate and add decel. First confirm whether the relay circuit brakes or coasts today.
-**Dependencies:** 8, H3 current measurement, part in hand. **Scope:** S-M
+**Dependencies:** 8, part in hand (2 spares). Chain running current should be under about 2.1 A (Adafruit board's current limit); above that the driver chops and the chain slows. **Scope:** S-M
 
-### Task 10: Retire the panel
-**Description:** No panel code in v2. Replace the semi-automatic reset input (plan open question 2). Document the A4/A5 constraint for any future manual buttons.
+### Task 10: Control panel
+**Description:** Port every panel button and the semi-automatic reset onto Axis moves (same filters, cutoffs and guards as the show). Both-lances buttons on D23/D24.
 **Dependencies:** 7. **Scope:** S
 
 ### Checkpoint C
@@ -109,7 +115,7 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 ### Task 11: Docs
 - [ ] `README.md`: build, upload, test, bench, calibration.
 - [ ] `docs/decisions/ADR-001..011`.
-- [ ] `docs/wiring.md`: pins, cap and fuse placement, switch filter, motor-power relay.
+- [ ] Wiring diagram (separate session, `docs/handoff-wiring-diagram.md`).
 - [ ] Operations manual (client): updated behaviour, fault codes and lockout, owner contact details kept.
 
 ## Phase 5: Stretch (separate plans)

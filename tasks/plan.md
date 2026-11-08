@@ -1,6 +1,6 @@
 # Implementation Plan: Joust firmware v2 (lance fix + overhaul)
 
-Status: APPROVED by owner 2026-11-07 (Tasks 1-4). Tasks 1-4 built, Checkpoint A waiting on owner review.
+Status: APPROVED by owner 2026-11-07 (Tasks 1-4). Tasks 1-4 built, Checkpoint A waiting on owner review. Branch `firmware-v2`.
 Date: 2026-11-07
 
 ## Overview
@@ -29,10 +29,13 @@ Old firmware: `2025_04_02_Joust_Deployment_NRG/2025_04_02_Joust_Deployment_NRG.i
 | ADR-007 | Chain drive on DRV8871, D44/D45 (Timer5, PWM raised above hearing). Timer0/millis untouched. Chain runs at 12 V, within DRV8871 VM 6.5-45 V. | Relays can't do speed or decel. Timer5 pins verified: `variants/mega/pins_arduino.h` lines 359-361 (D44 = OC5C, D45 = OC5B, D46 = OC5A). |
 | ADR-008 | Move guards: the origin switch must open within T ms; a limit behind the motor closing = STUCK_OR_REVERSED; both limits closed = WIRING_FAULT; a target closure before a minimum travel time is ignored. Any fault puts that axis in FAULTED. | Catches a stuck motor, a swapped motor lead, or a broken switch wire on the first move instead of stalling into a post every cycle. |
 | ADR-009 | Shield I/O hardening: Wire timeout on and checked after every shield write; idle axes re-sent STOP every 100 ms; I2C written only when duty changes; Wire at 400 kHz; `AFMS.begin()` first in setup, never blocking before the watchdog. | A dropped STOP leaves a motor running. `begin()` zeroes all 16 channels (`Adafruit_MotorShield.cpp:77-78`), but the PCA9685 keeps running motors through a Mega reset until then. |
-| ADR-010 | Fault policy (owner, Q5): **any** cutoff or guard fault on any axis stops every motor, locks the show, and is saved to EEPROM. A power cycle comes back locked, showing the fault. Unlock needs the key turned lock -> unlock (a change of state, not a key left in unlock), which clears the record and runs the automatic reset. Safe-op mode does not bypass a saved fault. | An operator diagnoses every fault. Persisting it stops a power cycle from hiding one. EEPROM: 4 KB, survives power off; written once per fault and once per unlock, far below the 100,000-write endurance (ATmega2560 datasheet). |
-| ADR-011 | Motor-power cut-off (owner, Q6): relay on PIN_MOTOR_POWER (D22, tentative) in the motor supply after the fuse, feeding the shield motor terminal and the chain driver. Energised only after setup has stopped every motor; dropped on any fault. Hardware must be OFF while the pin floats (reset, bootloader, upload). | A Mega reset does not reset the shield; this cuts motor power until the firmware is back in control. |
+| ADR-010 | Fault policy (owner, revised 2026-11-07). **Lance fault:** stop that lance, light its switch on the indicator, save it to EEPROM, then send the lance back to the end it came from. If it gets there, the show carries on (knights only rotate and the chain only moves while each knight is on a rotation switch). If the recovery move also fails, or the same lance faults 3 times in a row (proposed), lock. **Rotation or chain fault:** lock at once (collision risk). **Lock:** all motors stop, motor power off, saved to EEPROM; a power cycle comes back locked showing the fault; unlock needs the key turned lock -> unlock (not a key left in unlock), which clears the record and runs the automatic reset; safe-op does not bypass it. Indicator stays on until a key unlock. | Lance switches are the fragile part and a missed lance is cosmetic; rotation and chain faults risk a collision. Persisting the lock stops a power cycle from hiding a fault. EEPROM: 4 KB, survives power off; a few writes per fault, far below the 100,000-write endurance (ATmega2560 datasheet). |
+| ADR-012 | Fault indicator (proposed): NeoPixel strip on D25 (tentative), one pixel per limit switch plus one status pixel. Live: a switch's pixel shows when it reads closed; a failed switch blinks red; the status pixel shows running / manual / locked. Brightness capped in firmware. The start-button LED (D13) keeps its blink codes as a fallback. Later the same fault events go out over the ESP32 for remote notification (S1). | The Mega is covered by the shield, so staff need an external indicator that names the failed switch. One data pin for 11 indicators. |
+| ADR-011 | Motor-power cut-off (owner, Q6): relay on PIN_MOTOR_POWER (D22, tentative; 2-relay board as placeholder, then a single-relay board) in the motor supply after the fuse, feeding the shield motor terminal and the chain driver. Energised only after setup has stopped every motor; dropped on any fault. Hardware must be OFF while the pin floats (reset, bootloader, upload). | A Mega reset does not reset the shield; this cuts motor power until the firmware is back in control. |
 
-Retired: control panel manual mode (owner, Q4). Possible future change: if manual buttons come back, the two lance buttons must move off A4/A5, because the shield's I2C shares those lines and a press grounds the bus. Until then, disconnect A4/A5 at the panel. Manual moves come from the bench firmware or the serial console (later the ESP32).
+Control panel: **kept** (owner, revised 2026-11-07) until v2 is proven reliable; staff use it often and the gearing prevents moving the knights by hand. The both-lances buttons move off A4/A5 (removed by owner) to D23/D24 (tentative). Panel moves go through `Axis`, so they get the same filters, cutoffs and guards as the show.
+
+Power: two separate 12 V supplies stay for now (shield, chain; split in v1 to keep chain motor noise off the shield). Merge later only if Task 5 watch data shows no rise in switch glitches with the chain on the shared supply. Legacy fuse: 3 A, bypassed, assumed time-lag. All grounds must meet at one point (the DRV8871 inputs are referenced to Mega GND).
 
 Deferred: timed moves (move for N ms instead of to a limit) for choreography, added in S3 alongside the motion-limit survey.
 
@@ -88,12 +91,12 @@ See `tasks/todo.md` for acceptance criteria and verification per task.
 - [ ] Task 7: Port the show (lock/key, safe-op, home, joust, winner) onto Axis, constant speed; persistent lockout; motor-power relay
 - [ ] Task 8: Turn on decel for lances, then rotation
 - [ ] Task 9: Chain drive on DRV8871 + decel
-- [ ] Task 10: Retire the panel code paths; replace the semi-automatic reset input (open question)
+- [ ] Task 10: Port the control panel onto Axis moves (both-lances buttons on D23/D24)
 
 ### Checkpoint C: soak test, target 0 cutoffs in 300 runs (old: ~4 lance cutoffs in 150)
 
 ### Phase 4: Documentation
-- [ ] Task 11: README, wiring, ADRs, bench guide (owner); operations manual update (client, with owner contact details)
+- [ ] Task 11: README, wiring diagram (handoff: `docs/handoff-wiring-diagram.md`), ADRs, bench guide (owner); operations manual update (client, with owner contact details)
 
 ### Phase 5: Stretch (each gets its own short plan before code)
 - [ ] S1: ESP32 bridge on Serial1 + mesh node (`security-and-hardening` first)
@@ -104,7 +107,7 @@ See `tasks/todo.md` for acceptance criteria and verification per task.
 
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
-| Every fault now locks the show: at today's lance rate that is a lockout about every 38 runs | High | Checkpoint C soak (0 cutoffs in 300 runs) passes before the client runs v2. |
+| Lance faults keep happening after the upgrades | Med | Indicator names the switch; 3 in a row locks; Checkpoint C soak (0 cutoffs in 300 runs) passes before the client runs v2. |
 | Travel time varies too much (temperature, supply sag, wear) for time-based decel | High | Measure spread in Task 6; decel from the fastest trip; crawl is slow enough that late decel is harmless. |
 | Switch still unreadable even with caps + filter | High | Glitch counter in Task 5 quantifies it; hard cutoff limits damage; further hardware fix decided from data. |
 | I2C (motor shield) disturbed by motor noise | Med | ADR-009. |
@@ -119,9 +122,11 @@ See `tasks/todo.md` for acceptance criteria and verification per task.
 - Doubt-driven review, cycle 1 (fresh-context adversarial reviewer, 2026-11-07): 11 findings, all valid; folded in as ADR-003/004 changes, ADR-008, ADR-009, risks above, and Task 4/5/7 criteria.
 - Cross-model second opinion: declined by owner. Proceeding with single-model findings only.
 - 2026-11-07, owner answers: Q1 brush ground; Q2 all motors 12 V, chain at full 12 V; Q3 calibration in both config.h and EEPROM; Q4 retire the panel; Q5 any fault locks, lockout survives power cycles; Q6 add motor-power relay; Q7 owner work contacts are public and belong in the client manual. Axis simplified: any fault -> FAULTED (replaces "3 consecutive cutoffs -> DISABLED").
+- 2026-11-07, owner answers round 2: shield fed from 12 V; 3 A legacy fuse; DRV8871 confirmed (2 spares); panel kept (Q4 reversed); lance faults recover instead of locking; indicator wanted; 2-relay board as motor-power placeholder; A4/A5 buttons removed.
 - Skills adopted for this project: test-driven-development, incremental-implementation, source-driven-development; later security-and-hardening (S1), observability-and-instrumentation (S3).
 
 ## Open questions
-1. Shield motor supply voltage (the 12 V supply, or lower?). At 12 V the old duties average about 2.3 V (lance) and 7.0 V (rotate).
-2. Semi-automatic reset without the panel (knights mid-track, all four rotation switches open): operator picks CW/CCW over the serial console (recommended), keep only the two rotate buttons (A2/A3), or lock out and reposition by hand?
-3. Key unlock used to enter manual mode. With the panel retired: key unlock -> automatic reset -> show. Start button held at boot no longer enters manual mode. OK?
+1. Lance lockout after 3 faults in a row on the same lance: OK, or a different number?
+2. Indicator: NeoPixel strip (recommended) or discrete LEDs? Where will staff see it?
+3. Which supply powers the Mega itself (USB, barrel jack, VIN from one of the 12 V supplies)?
+4. Chain motor running current, if measured (Adafruit DRV8871 board limits at about 2.1 A with its fitted 30 kOhm ILIM resistor; DRV8871 datasheet 7.3.3).
