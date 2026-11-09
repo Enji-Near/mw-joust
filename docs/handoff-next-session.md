@@ -5,10 +5,10 @@ Start the session in the Joust repo and say: "Read `docs/handoff-next-session.md
 ## Where things stand
 - Branch `firmware-v2` (pushed). `main` holds only the old motor bench test; merging is the owner's call.
 - Rules: read `CLAUDE.md` first, then the user-level `~/.claude/CLAUDE.md`. Commit and push at the end of every turn. Never upload or move hardware without asking. Repo is public.
-- Plan: `tasks/plan.md` (ADR table, risks, open questions). Tasks: `tasks/todo.md`. The owner ticks items in Obsidian (`[x] ... ✅ YYYY-MM-DD`), so re-read before editing and keep their ticks.
+- Plan (risks, open questions): `Joust v2 Plan.md`; tasks: `Joust v2 Todo.md`, both in `~/01-Vault/Employment/Miniature World/Camelot/Joust/` (moved out of the repo 2026-11-09). ADR table: `docs/decisions.md`. The owner ticks items in Obsidian (`[x] ... ✅ YYYY-MM-DD`), so re-read before editing and keep their ticks.
 
 ## Done (2026-11-07)
-- Reviewed the v1 sketch: `2025_04_02_Joust_Deployment_NRG/`. Root causes of the broken lance posts are in plan.md:
+- Reviewed the v1 sketch: `2025_04_02_Joust_Deployment_NRG/`. Root causes of the broken lance posts are in `docs/decisions.md`:
   - a lance timeout never stopped the motor;
   - one noisy read right after starting meant that lance was never watched;
   - the switches were sampled only about every 300 ms.
@@ -19,7 +19,7 @@ Start the session in the Joust repo and say: "Read `docs/handoff-next-session.md
 - Checkpoint A done. The owner handed the Axis interface review to the tests.
 - Wiring diagram: separate session, using `docs/handoff-wiring-diagram.md`.
 
-## Decisions made (details in plan.md)
+## Decisions made (details in `docs/decisions.md`)
 - **Hardware:**
   - Keep the lance motors and the Adafruit Motor Shield V2. Fix the switches with caps and code.
   - Chain drive moves to a DRV8871 (owner has 2 spares).
@@ -35,7 +35,7 @@ Start the session in the Joust repo and say: "Read `docs/handoff-next-session.md
 - **Calibration:** `config.h` defaults, plus an optional copy saved to EEPROM by the bench firmware.
 
 ## Open questions for the owner (ask these first)
-1. **EEPROM wear, the first item to settle:** does ADR-013 survive? See plan.md Open questions 1 for the numbers. The owner wants it cut if there is any real chance of wear-out over 5+ years at hundreds of lance moves a day. Ask how many shows run per day.
+1. **EEPROM wear, the first item to settle:** does ADR-013 survive? See the plan's Open questions 1 for the numbers. The owner wants it cut if there is any real chance of wear-out over 5+ years at hundreds of lance moves a day. Ask how many shows run per day.
 2. ADR-013 refinement: also record MOVING_TO_x at move start, so a mid-move power cut is recognised. OK?
 3. Boot probe (owner decision, 2026-11-08):
    - when no lance switch reads closed at boot and no failure lock is saved, back off the assumed start post slightly, then return; this should close a limit;
@@ -55,7 +55,7 @@ Start the session in the Joust repo and say: "Read `docs/handoff-next-session.md
 - Run `pio run -e joust -e bench` and `pio test -e native` after every change; report flash and RAM.
 - Ask the owner before flashing. Task 5 is the first firmware that moves motors.
 
-## Owner's hardware in progress (`tasks/todo.md` H1-H3)
+## Owner's hardware in progress (`Joust v2 Todo.md` H1-H3)
 - Caps: 0.1 uF across each motor. 330 uF + 0.1 uF at the supply input. 100 uF + 0.1 uF at the shield terminal and the DRV8871.
 - Lance input filter: 1 kOhm pull-up, 1 kOhm series, 100 nF.
 - Signal line repairs, brush checks, the merged supply, and the relay.

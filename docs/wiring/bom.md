@@ -1,7 +1,7 @@
 # Joust v2: bill of materials (parts v2 adds)
 
 Draft 0.1, 2026-11-08. References match `kicad/joust-v2.kicad_sch`. "Have" = owner already has it.
-Values come from `tasks/todo.md` H1-H3 and `tasks/plan.md` (ADR-007, ADR-011). Part numbers are not chosen; any part meeting the spec works.
+Values come from the owner's hardware tasks (H1-H3) and `docs/decisions.md` (ADR-007, ADR-011). Part numbers are not chosen; any part meeting the spec works.
 
 ## Capacitors
 

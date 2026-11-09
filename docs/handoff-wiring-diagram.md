@@ -13,8 +13,8 @@ Before drawing, ask the owner which format they want. Options:
 ## Read first
 1. `CLAUDE.md` (project rules: public repo, commit and push every turn on branch `firmware-v2`, cite datasheets, never invent hardware facts).
 2. `firmware/include/config.h`: **the source of truth for pins.** If the diagram needs a pin change, change config.h and run `pio run -e joust -e bench` from `firmware/`.
-3. `tasks/plan.md`: ADR-007 (DRV8871), ADR-010 (fault policy), ADR-011 (motor-power relay), ADR-012 (indicator), and the Power paragraph.
-4. `tasks/todo.md` H1-H3: hardware changes in progress (the owner ticks items there; re-read before editing).
+3. `docs/decisions.md`: ADR-007 (DRV8871), ADR-010 (fault policy), ADR-011 (motor-power relay), ADR-012 (indicator), and the Power paragraph.
+4. `Joust v2 Todo.md` H1-H3 (in `~/01-Vault/Employment/Miniature World/Camelot/Joust/`): hardware changes in progress (the owner ticks items there; re-read before editing).
 5. v1 reference: `2025_04_02_Joust_Deployment_NRG/*.ino` and `Electronics Pinout.xlsx` (the owner's v1 pinout; reading it needs `openpyxl`, or ask the owner for a CSV export).
 
 ## System as known (2026-11-07)

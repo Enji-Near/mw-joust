@@ -1,13 +1,6 @@
-# Implementation Plan: Joust firmware v2 (lance fix + overhaul)
+# Joust v2: root causes and decisions
 
-Status: APPROVED by owner 2026-11-07 (Tasks 1-4). Tasks 1-4 built, Checkpoint A waiting on owner review. Branch `firmware-v2`.
-Date: 2026-11-07
-
-## Overview
-
-Rewrite the Joust firmware so the lance up/down (LUD) motors stop reliably at their posts and never drive into them for more than a bounded time, then extend the same motion code to rotation and the chain drive. Keep the existing lance motors and the Adafruit Motor Shield V2 (owner decision: fix with caps and code, no servo/driver swap). Move the chain drive from relays to a DRV8871. Add a bench/calibration firmware like the Space Ships project, and leave clean hooks for the ESP32 bridge and choreographed "life" moves later. ezButton is removed entirely (owner request); all inputs use the project's own `SwitchFilter`.
-
-Old firmware: `2025_04_02_Joust_Deployment_NRG/2025_04_02_Joust_Deployment_NRG.ino` (1683 lines, Arduino Mega 2560, ezButton, Adafruit_MotorShield).
+The firmware comments cite these ADR numbers. Copied from the working plan on 2026-11-09; the plan and task list now live in the owner's notes (outside this repo). One file per ADR comes with Task 11.
 
 ## Root causes of the LUD failures (from the review)
 
@@ -16,7 +9,7 @@ Old firmware: `2025_04_02_Joust_Deployment_NRG/2025_04_02_Joust_Deployment_NRG.i
 3. **The switch is sampled every ~300 ms** (three `delay(100)` per loop pass) and ezButton needs two agreeing samples, so the motor stalls against the post for 300-600 ms on every good stop. Under continuous motor noise any glitch restarts the debounce.
 4. Weak internal pull-up (20-50 kOhm) on long wires next to motor leads. The bolt side is grounded through a brush (owner, Q1), a second sliding contact that more wetting current also helps.
 
-## Architecture decisions (each gets an ADR in `docs/decisions/`)
+## Architecture decisions
 
 | # | Decision | Why |
 | --- | --- | --- |
@@ -44,92 +37,3 @@ Verified facts this plan relies on:
 - Adafruit_MotorShield 1.1.4 `run()` handles FORWARD, BACKWARD, RELEASE only; BRAKE is defined but not implemented (`Adafruit_MotorShield.cpp:231-244`). RELEASE = coast. `setSpeed(s)` writes `s * 16` (line 255), so old lance 50 = 800/4095 and rotate 150 = 2400/4095 in `setSpeedFine()` units.
 - AVR Wire (framework-arduino-avr 5.4.0) has `setWireTimeout()` but it is **off by default** (`twi.c:54`, `twi_timeout_us = 0`).
 
-## Dependency graph
-
-```
-config.h (pins, polarity, tunables, calibration defaults)
-   │
-   ├── SwitchFilter (pure) ───────────────┐
-   ├── SpeedProfile (pure) ───────────────┤
-   │                                       ▼
-   │                                 Axis state machine (pure, MotorDriver interface)
-   │                                       │
-   ├── Drivers: ShieldDriver, RelayDriver → Drv8871Driver
-   │                                       │
-   │              ┌────────────────────────┴───────────────┐
-   │              ▼                                        ▼
-   │        bench env (jog, watch, calibrate)      joust env (lock/key, lockout, home, show)
-   │              │                                        │
-   │              └──── calibration ─► config.h / EEPROM ◄─┘
-   │
-   └── Console (command protocol) ── later: ESP32 bridge
-```
-
-## Task list
-
-See `tasks/todo.md` for acceptance criteria and verification per task.
-
-### Phase 0: Hardware (owner, in parallel)
-- [ ] H1: Noise suppression, caps placed as in todo
-- [ ] H2: Repair signal lines, re-solder broken post
-- [ ] H3: Fuses and supply caps; current measurements; motor-power relay
-
-### Phase 1: Foundation (no hardware needed)
-- [x] Task 1: PlatformIO project, config.h, native test env, project CLAUDE.md
-- [x] Task 2: SwitchFilter + tests
-- [x] Task 3: SpeedProfile + tests
-- [x] Task 4: Axis state machine + tests (fake driver)
-
-### Checkpoint A: tests pass on host, `pio run` clean for Mega, owner review of the Axis interface
-
-### Phase 2: Bench firmware (first hardware contact, owner runs it)
-- [ ] Task 5: Drivers + bench jog + switch watch with glitch counter
-- [ ] Task 6: Calibration, print config block, save/clear EEPROM copy
-
-### Checkpoint B: noise measured before/after caps; calibration values in config.h
-
-### Phase 3: Live firmware
-- [ ] Task 7: Port the show (lock/key, safe-op, home, joust, winner) onto Axis, constant speed; persistent lockout; motor-power relay
-- [ ] Task 8: Turn on decel for lances, then rotation
-- [ ] Task 9: Chain drive on DRV8871 + decel
-- [ ] Task 10: Port the control panel onto Axis moves (both-lances buttons on D23/D24)
-
-### Checkpoint C: soak test, target 0 cutoffs in 300 runs (old: ~4 lance cutoffs in 150)
-
-### Phase 4: Documentation
-- [ ] Task 11: README, wiring diagram (handoff: `docs/handoff-wiring-diagram.md`), ADRs, bench guide (owner); operations manual update (client, with owner contact details)
-
-### Phase 5: Stretch (each gets its own short plan before code)
-- [ ] S1: ESP32 bridge on Serial1 + mesh node (`security-and-hardening` first)
-- [ ] S2: Limit-of-motion survey (manual jog, owner reports safe partial rotations near the divider)
-- [ ] S3: Choreography: timed moves, collision, winner flourish, loser bow (`observability-and-instrumentation` for remote monitoring)
-
-## Risks and mitigations
-
-| Risk | Impact | Mitigation |
-| --- | --- | --- |
-| Lance faults keep happening after the upgrades: each one locks the show | Med | Checkpoint C soak (0 cutoffs in 300 runs) passes before the client runs v2; glitch counts show whether the filter or the hardware needs work. |
-| Merged supply brings chain noise back onto the shield | Med | Compare glitch counts in Task 5 with the chain on the shared supply; revert to two supplies if they rise. |
-| Travel time varies too much (temperature, supply sag, wear) for time-based decel | High | Measure spread in Task 6; decel from the fastest trip; crawl is slow enough that late decel is harmless. |
-| Switch still unreadable even with caps + filter | High | Glitch counter in Task 5 quantifies it; hard cutoff limits damage; further hardware fix decided from data. |
-| I2C (motor shield) disturbed by motor noise | Med | ADR-009. |
-| Rewrite regresses rotation/chain behaviour that works today | Med | Task 7 ports behaviour at constant speed first and is soak-tested before decel is added. |
-| Motors keep running through a Mega reset, or if the I2C bus is dead | Med | ADR-009 + ADR-011 motor-power relay. |
-| Post is both the sensor and the hard stop: detection happens at impact | Med | Decel makes the impact a crawl. |
-| DRV8871 coasts where the relays may have braked | Med | Stop chain with brake (both inputs high); confirm relay wiring first. Timer5 reserved (no Servo library). |
-| EEPROM contents surviving a firmware upload | Low | Unverified for this upload path; check on the bench before Task 7 relies on it. |
-
-## Design review log
-
-- Doubt-driven review, cycle 1 (fresh-context adversarial reviewer, 2026-11-07): 11 findings, all valid; folded in as ADR-003/004 changes, ADR-008, ADR-009, risks above, and Task 4/5/7 criteria.
-- Cross-model second opinion: declined by owner. Proceeding with single-model findings only.
-- 2026-11-07, owner answers: Q1 brush ground; Q2 all motors 12 V, chain at full 12 V; Q3 calibration in both config.h and EEPROM; Q4 retire the panel; Q5 any fault locks, lockout survives power cycles; Q6 add motor-power relay; Q7 owner work contacts are public and belong in the client manual. Axis simplified: any fault -> FAULTED (replaces "3 consecutive cutoffs -> DISABLED").
-- 2026-11-07, owner answers round 2: shield fed from 12 V; 3 A legacy fuse; DRV8871 confirmed (2 spares); panel kept (Q4 reversed); lance faults recover instead of locking; indicator wanted; 2-relay board as motor-power placeholder; A4/A5 buttons removed.
-- 2026-11-07, round 3: single supply + single relay; any lance fault locks (no recovery, no retries); start button is the only indicator; Mega stays on USB; owner delegated the Axis interface review to the tests.
-- 2026-11-08, round 4: lock only on a failed lance move, not on lost contact at rest; last known lance position kept in EEPROM (ADR-013); shield VIN disconnected, Mega on USB.
-- Skills adopted for this project: test-driven-development, incremental-implementation, source-driven-development; later security-and-hardening (S1), observability-and-instrumentation (S3).
-
-## Open questions (next session)
-1. **EEPROM wear: decide or cut ADR-013.** Owner: hundreds of lance moves a day for 5+ years; if there is any real chance of wearing out the chip, cut it. Endurance is 100,000 writes per byte (ATmega2560 datasheet, to cite). Rough numbers to check: 300 shows/day x 8 lance moves x 2 writes (with MOVING_TO_x) = 4,800 writes/day. One fixed byte would wear out in about 3 weeks. A ring over 1,024 bytes gives about 58 years; the whole 4 KB about 230 years. Each record needs a CRC so a worn byte is detected, not trusted. Get the real show count per day from the owner.
-2. ADR-013 MOVING_TO_x state (written at move start, so a mid-move power cut is recognised): OK?
-3. Boot probe details: how far to back off (time at crawl), and whether it runs in unattended safe-op boot.

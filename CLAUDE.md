@@ -2,7 +2,7 @@
 
 ## Project
 - Two knights on a chain drive joust past each other: lances up/down, knights rotate, chain drive carries them. Unattended public display, heavy daily use.
-- Live firmware v1: `2025_04_02_Joust_Deployment_NRG/` (Arduino sketch, reference only). v2: `firmware/` (PlatformIO). Plan and tasks: `tasks/plan.md`, `tasks/todo.md`.
+- Live firmware v1: `2025_04_02_Joust_Deployment_NRG/` (Arduino sketch, reference only). v2: `firmware/` (PlatformIO). Decisions: `docs/decisions.md`. Plan, todo and bring-up checklist are the owner's notes, outside the repo: `~/01-Vault/Employment/Miniature World/Camelot/Joust/` (`Joust v2 Plan.md`, `Joust v2 Todo.md`, `Joust v2 Bring-up Checklist.md`).
 - `motor_bench_test/`: earlier N20/stepper retrofit endurance test. Retrofit set aside: existing lance motors and shield stay.
 
 ## Hardware
