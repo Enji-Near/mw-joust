@@ -23,11 +23,11 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 ### H3: Power inputs
 - [x] Measure each supply's current over a full show (meter in series on the 10 A range, or an inline DC power meter). Record the highest steady reading. The chain motor's running current also sizes the DRV8871. ✅ 2026-11-07
 - [x] Q: shield motor supply voltage. ✅ 2026-11-07
-- [ ] Merge to one 12 V supply (owner decision).
+- [x] Merge to one 12 V supply (owner decision). ✅ 2026-11-08
 - [x] Shield VIN disconnected, Mega on USB (owner). ✅ 2026-11-08
 - [ ] Measure the combined current over a full show on the single supply; 3 A time-lag fuse at its + output if the highest steady reading stays under about 2 A (else size up, within the supply's and wire's rating).
-- [ ] At the supply input (before the motor-power relay): 330 uF + 0.1 uF ceramic. At the shield motor terminal and the DRV8871 VM (after the relay): 100 uF + 0.1 uF. Electrolytics 25 V or higher, low-ESR, polarity observed, leads short.
-- [ ] Motor-power cut-off relay (ADR-011): one relay in the single supply's + line after the fuse. 2-relay board as placeholder, then a single-relay board. Contacts rated above 3 A at 12 V DC. Bench check: module powered, input pin left floating -> relay must stay OFF.
+- [x] At the supply input (before the motor-power relay): 330 uF + 0.1 uF ceramic. At the shield motor terminal and the DRV8871 VM (after the relay): 100 uF + 0.1 uF. Electrolytics 25 V or higher, low-ESR, polarity observed, leads short. ✅ 2026-11-08
+- [x] Motor-power cut-off relay (ADR-011): one relay in the single supply's + line after the fuse. 2-relay board as placeholder, then a single-relay board. Contacts rated above 3 A at 12 V DC. Bench check: module powered, input pin left floating -> relay must stay OFF. ✅ 2026-11-08
 - [x] Q: does the bolt stay on the up post when released? Owner: it should, but it's a threaded bolt on a single header pin and can shift slightly. ✅ 2026-11-08
 
 ## Phase 1: Foundation

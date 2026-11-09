@@ -30,7 +30,7 @@ All inputs switch to GND, active LOW, with a pull-up. Limits have the external R
 | D10 | PIN_K2_ROTATE_CCW | K2 rotate CCW [D] | In | RC filter (SW8) |
 | D11 | PIN_K1_ROTATE_CW | K1 rotate CW [E'] | In | RC filter (SW9) |
 | D12 | PIN_K2_ROTATE_CW | K2 rotate CW [E] | In | RC filter (SW10) |
-| D13 | PIN_LED | Start-button LED (and onboard LED) | Out | Wiring TBD; v1 comment suggests 220 Ohm series |
+| D13 | PIN_LED | Start-button LED (and onboard LED) | Out | HIGH = on. Drives MOSFET Q1 (same part as Sawmill), which switches the 12 V button LED |
 | D18, D19 | - | Serial1 TX1 / RX1 | - | Reserved: future ESP32 via level shifter |
 | D20, D21 | - | I2C SDA / SCL to the shield | - | Reserved |
 | D22 | PIN_MOTOR_POWER | Motor-power relay K1 | Out | Tentative pin. OFF while floating |
@@ -61,6 +61,7 @@ All inputs switch to GND, active LOW, with a pull-up. Limits have the external R
 ## Power
 
 - 12 V PSU -> F1 3 A time-lag -> C1 330 uF + C2 100 nF -> K1 relay COM/NO -> +12V_SW to the shield motor terminal (C3 100 uF + C4 100 nF) and the chain driver (C9 100 uF + C10 100 nF at the DRV8871 VM).
+- Start-button LED: 12 V, fed from `+12V_FUSED` (before the relay) so it can still blink a fault after motor power is cut. Q1 switches it from D13; Q1 GND to the star ground.
 - Mega on USB. Shield Vin jumper OFF, so 12 V never reaches the Mega.
 - All grounds meet at one point. The DRV8871 inputs are referenced to Mega GND.
 
@@ -70,6 +71,6 @@ All inputs switch to GND, active LOW, with a pull-up. Limits have the external R
 2. Where the panel, key and start button sit, and which connectors or terminals each harness uses.
 3. Does the shield tie A4/A5 to SDA/SCL? Continuity check, power off.
 4. Where the motor-power relay board mounts; its input polarity (most boards are active LOW).
-5. How the start-button LED is wired to D13.
+5. Start LED MOSFET Q1: which part (Sawmill repo says only "logic-level MOSFET"); does its module have a gate pull-down (else add 10 kOhm gate to GND); are the LED terminals separate from the switch contacts?
 6. Chain relay board: how the contacts drive the motor; does it brake or coast at stop?
 7. `Electronics Pinout.xlsx` sheet 1 disagrees with config.h (it has K1 lance down on D7 and up on D3, the reverse of config.h, and lists D5/D6 as lance buttons). Sheet 2 matches config.h. Which sheet is current? This drawing follows config.h.

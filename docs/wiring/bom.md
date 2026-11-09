@@ -7,14 +7,14 @@ Values come from `tasks/todo.md` H1-H3 and `tasks/plan.md` (ADR-007, ADR-011). P
 
 | Ref | Qty | Value | Spec | Where |
 | --- | --- | --- | --- | --- |
-| C1 | 1 | 330 uF | Aluminium electrolytic, low-ESR, 35 V (25 V minimum), radial | Supply input, before the relay |
-| C3, C9 | 2 | 100 uF | Aluminium electrolytic, low-ESR, 35 V (25 V minimum), radial | Shield motor terminal; DRV8871 VM |
-| C2, C4, C10 | 3 | 100 nF | Ceramic X7R, 50 V, leaded | Beside C1, C3, C9 |
+| C1 | 1 | 330 uF | Aluminium electrolytic, low-ESR, 35 V (25 V minimum), radial | Supply input, before the relay. **Fitted** (todo H3, 2026-11-08) |
+| C3, C9 | 2 | 100 uF | Aluminium electrolytic, low-ESR, 35 V (25 V minimum), radial | Shield motor terminal; DRV8871 VM. **Fitted** (todo H3) |
+| C2, C4, C10 | 3 | 100 nF | Ceramic X7R, 50 V, leaded | Beside C1, C3, C9. **Fitted** (todo H3) |
 | C5-C8, C11 | 5 | 100 nF | Ceramic X7R, 50 V, leaded (5 mm pitch) | Directly across each motor's terminals. **Fitted** (todo H1, 2026-11-08) |
 | C12-C21 | 10 | 100 nF | Ceramic X7R, 50 V, leaded | Limit input filters, at the Mega pin |
 | (optional) | 10 | 100 nF | Ceramic X7R, 50 V | Each motor terminal to the motor case |
 
-- 100 nF still to buy: 13 (C2, C4, C10, C12-C21), 23 with the optional case caps. A 50-pack covers spares.
+- 100 nF still to fit: 10 (C12-C21), 20 with the optional case caps.
 - Never fit an electrolytic across a motor (todo H1).
 - Electrolytics: observe polarity, keep leads short.
 
@@ -27,7 +27,6 @@ Values come from `tasks/todo.md` H1-H3 and `tasks/plan.md` (ADR-007, ADR-011). P
 
 - 20 x 1 kOhm required; buy a 50- or 100-pack.
 - Pull-up current: 5 mA per closed switch, 25 mW per resistor. All 10 closed: 50 mA from the Mega 5 V (USB).
-- R1 (220 Ohm, start LED) is existing v1 wiring, not a new part. Confirm it is there (open item 5).
 
 ## Power and switching
 
@@ -35,7 +34,8 @@ Values come from `tasks/todo.md` H1-H3 and `tasks/plan.md` (ADR-007, ADR-011). P
 | --- | --- | --- | --- | --- |
 | PS1 | 1 | 12 V DC supply | Current rating TBD (open item 1); must exceed the measured full-show peak | Have (one of the v1 supplies) |
 | F1 | 1 | Fuse, 3 A time-lag | Plus a holder rated above 3 A at 12 V; check fuse size (5x20 mm assumed, unverified) | Have (v1 fuse). Buy 5 spares |
-| K1 | 1 | 1-channel 5 V relay module | Contacts above 3 A at 12 V DC; optocoupled input; must stay OFF with input floating | 2-relay board as placeholder; buy a 1-channel |
+| K1 | 1 | Motor-power relay module | Contacts above 3 A at 12 V DC; must stay OFF with input floating | **Fitted** (todo H3, 2026-11-08); single-channel board later if the placeholder is in |
+| Q1 | 1 | Logic-level N-MOSFET switch, same part as the Sawmill LED | Switches the 12 V start-button LED from D13; gate pull-down needed | Have. Part number TBD |
 | U3 | 1 | Adafruit DRV8871 breakout (product 3190) | VM 6.5-45 V; current limit about 2.1 A with the 30 kOhm ILIM (DRV8871 datasheet 7.3.3) | Have (2 spares). Task 9 |
 
 ## Wiring and assembly
@@ -59,10 +59,9 @@ Values come from `tasks/todo.md` H1-H3 and `tasks/plan.md` (ADR-007, ADR-011). P
 
 ## Order list (what to buy now)
 
-- 1 x 330 uF 35 V low-ESR electrolytic
-- 2 x 100 uF 35 V low-ESR electrolytic (buy 4)
-- 13 x 100 nF 50 V X7R ceramic, leaded (buy a 50-pack)
+Supply caps, motor caps and the relay are fitted (todo H1/H3). Still needed for the limit filters:
+- 10 x 100 nF 50 V X7R ceramic, leaded (from the 50-pack)
 - 20 x 1 kOhm 1/4 W metal film (buy a 100-pack)
-- 1 x 1-channel 5 V relay module, contacts above 3 A at 12 V DC
+- 1 x 10 kOhm (Q1 gate pull-down, if its module has none)
 - Spare 3 A time-lag fuses (match the existing holder)
 - Protoboard, 2-pole 5.08 mm screw terminals (6), header pins or Dupont cable, 22 AWG wire, heat-shrink
