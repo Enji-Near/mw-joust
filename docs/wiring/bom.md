@@ -10,11 +10,11 @@ Values come from `tasks/todo.md` H1-H3 and `tasks/plan.md` (ADR-007, ADR-011). P
 | C1 | 1 | 330 uF | Aluminium electrolytic, low-ESR, 35 V (25 V minimum), radial | Supply input, before the relay |
 | C3, C9 | 2 | 100 uF | Aluminium electrolytic, low-ESR, 35 V (25 V minimum), radial | Shield motor terminal; DRV8871 VM |
 | C2, C4, C10 | 3 | 100 nF | Ceramic X7R, 50 V, leaded | Beside C1, C3, C9 |
-| C5-C8, C11 | 5 | 100 nF | Ceramic X7R, 50 V, leaded (5 mm pitch) | Directly across each motor's terminals |
+| C5-C8, C11 | 5 | 100 nF | Ceramic X7R, 50 V, leaded (5 mm pitch) | Directly across each motor's terminals. **Fitted** (todo H1, 2026-11-08) |
 | C12-C21 | 10 | 100 nF | Ceramic X7R, 50 V, leaded | Limit input filters, at the Mega pin |
 | (optional) | 10 | 100 nF | Ceramic X7R, 50 V | Each motor terminal to the motor case |
 
-- 100 nF total: 18 required, 28 with the optional case caps. A 50-pack covers spares.
+- 100 nF still to buy: 13 (C2, C4, C10, C12-C21), 23 with the optional case caps. A 50-pack covers spares.
 - Never fit an electrolytic across a motor (todo H1).
 - Electrolytics: observe polarity, keep leads short.
 
@@ -61,7 +61,7 @@ Values come from `tasks/todo.md` H1-H3 and `tasks/plan.md` (ADR-007, ADR-011). P
 
 - 1 x 330 uF 35 V low-ESR electrolytic
 - 2 x 100 uF 35 V low-ESR electrolytic (buy 4)
-- 18 x 100 nF 50 V X7R ceramic, leaded (buy a 50-pack)
+- 13 x 100 nF 50 V X7R ceramic, leaded (buy a 50-pack)
 - 20 x 1 kOhm 1/4 W metal film (buy a 100-pack)
 - 1 x 1-channel 5 V relay module, contacts above 3 A at 12 V DC
 - Spare 3 A time-lag fuses (match the existing holder)

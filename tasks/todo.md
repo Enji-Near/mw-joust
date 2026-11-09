@@ -6,15 +6,15 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 ## Phase 0: Hardware (owner)
 
 ### H1: Motor noise suppression
-- [ ] 0.1 uF ceramic directly across each motor's two terminals (or as close as possible). Optional: 0.1 uF from each terminal to the motor case.
+- [x] 0.1 uF ceramic directly across each motor's two terminals (or as close as possible). Optional: 0.1 uF from each terminal to the motor case. ✅ 2026-11-08
 - [x] **Do not put the 100 uF electrolytic across a motor.** The lance motors reverse, so a polarised cap gets reverse-biased every other move. A big cap on a PWM'd driver output also pulls a current spike on every PWM edge. 100 uF goes across the motor supply instead (see H3). ✅ 2026-11-07
-- [ ] Twist each motor's two leads together; route switch wires away from motor wires where possible.
-- [ ] Recommended: at the Mega, each lance switch input gets a 1 kOhm pull-up to 5 V (about 5 mA through the bolt/post and brush contacts helps break through oxide and grease; the internal pull-up gives ~0.1-0.25 mA), then 1 kOhm series and 100 nF to GND at the pin.
+- [x] Twist each motor's two leads together; route switch wires away from motor wires where possible. ✅ 2026-11-08
+- [ ] At the Mega, all 10 limit inputs (owner, 2026-11-08; was lance only) get a 1 kOhm pull-up to 5 V (about 5 mA through the bolt/post and brush contacts helps break through oxide and grease; the internal pull-up gives ~0.1-0.25 mA), then 1 kOhm series and 100 nF to GND at the pin.
 - [x] Dedicated ground path to each bolt (brush), not through the gearbox shaft and bearings. ✅ 2026-11-07
-- [ ] Check each ground brush: clean contact, spring pressure, wire intact (it is a second sliding contact in the switch path).
+- [x] Check each ground brush: clean contact, spring pressure, wire intact (it is a second sliding contact in the switch path). ✅ 2026-11-08
 
 ### H2: Repairs
-- [ ] Repair damaged signal lines
+- [x] Repair damaged signal lines ✅ 2026-11-08
 - [x] re-solder the broken post. ✅ 2026-11-07
 - [ ] Meter check each lance switch from the Mega pin to GND: open with lance mid-travel, near 0 ohm when the bolt rests on the post (rotate the axle slightly: the reading should stay low through the brush).
 - [x] Remove the panel's A4/A5 buttons (they may share the shield's I2C lines). ✅ 2026-11-07
@@ -115,7 +115,7 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 ### Task 11: Docs
 - [ ] `README.md`: build, upload, test, bench, calibration.
 - [ ] `docs/decisions/ADR-001..011`.
-- [ ] Wiring diagram (separate session, `docs/handoff-wiring-diagram.md`).
+- [ ] Wiring diagram: draft 0.1 in `docs/wiring/` (block diagram, KiCad schematic, pin table, BoM); owner review and open items pending.
 - [ ] Operations manual (client): updated behaviour, fault codes and lockout, owner contact details kept.
 
 ## Phase 5: Stretch (separate plans)
