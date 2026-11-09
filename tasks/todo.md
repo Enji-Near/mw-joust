@@ -5,11 +5,13 @@ Rule: nothing that moves hardware is uploaded or run without the owner's OK.
 
 ## Phase 0: Hardware (owner)
 
+Bring-up measurements before calibration: [bring-up checklist](bringup-checklist.md).
+
 ### H1: Motor noise suppression
 - [x] 0.1 uF ceramic directly across each motor's two terminals (or as close as possible). Optional: 0.1 uF from each terminal to the motor case. ✅ 2026-11-08
 - [x] **Do not put the 100 uF electrolytic across a motor.** The lance motors reverse, so a polarised cap gets reverse-biased every other move. A big cap on a PWM'd driver output also pulls a current spike on every PWM edge. 100 uF goes across the motor supply instead (see H3). ✅ 2026-11-07
 - [x] Twist each motor's two leads together; route switch wires away from motor wires where possible. ✅ 2026-11-08
-- [ ] At the Mega, all 10 limit inputs (owner, 2026-11-08; was lance only) get a 1 kOhm pull-up to 5 V (about 5 mA through the bolt/post and brush contacts helps break through oxide and grease; the internal pull-up gives ~0.1-0.25 mA), then 1 kOhm series and 100 nF to GND at the pin.
+- [x] At the Mega, all 10 limit inputs (owner, 2026-11-08; was lance only) get a 1 kOhm pull-up to 5 V (about 5 mA through the bolt/post and brush contacts helps break through oxide and grease; the internal pull-up gives ~0.1-0.25 mA), then 1 kOhm series and 100 nF to GND at the pin. ✅ 2026-11-09
 - [x] Dedicated ground path to each bolt (brush), not through the gearbox shaft and bearings. ✅ 2026-11-07
 - [x] Check each ground brush: clean contact, spring pressure, wire intact (it is a second sliding contact in the switch path). ✅ 2026-11-08
 
