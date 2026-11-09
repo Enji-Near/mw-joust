@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "Joust")(type "KiCad")(uri "${KIPRJMOD}/joust-v2.kicad_sym")(options "")(descr "Joust project symbols"))
+)

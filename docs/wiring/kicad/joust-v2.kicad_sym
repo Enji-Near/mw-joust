@@ -1,0 +1,1567 @@
+(kicad_symbol_lib
+	(version 20241209)
+	(generator "gen_schematic.py")
+	(generator_version "9.0")
+	(symbol "Arduino_Mega2560"
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 1.016)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 0 29.21 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "Arduino Mega 2560 R3"
+			(at 0 -29.21 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" "Only the pins Joust v2 uses. Pins: firmware/include/config.h"
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(symbol "Arduino_Mega2560_0_1"
+			(rectangle
+				(start -10.16 27.94)
+				(end 10.16 -27.94)
+				(stroke (width 0.254) (type default))
+				(fill
+					(type background)
+				)
+			)
+		)
+		(symbol "Arduino_Mega2560_1_1"
+			(pin passive line
+				(at -12.7 25.4 0)
+				(length 2.54)
+				(name "D2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 22.86 0)
+				(length 2.54)
+				(name "D3"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D3"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 20.32 0)
+				(length 2.54)
+				(name "D4"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D4"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 17.78 0)
+				(length 2.54)
+				(name "D5"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D5"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 15.24 0)
+				(length 2.54)
+				(name "D6"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D6"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 12.7 0)
+				(length 2.54)
+				(name "D7"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D7"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 10.16 0)
+				(length 2.54)
+				(name "D8"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D8"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 7.62 0)
+				(length 2.54)
+				(name "D9"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D9"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 5.08 0)
+				(length 2.54)
+				(name "D10"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D10"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 2.54 0)
+				(length 2.54)
+				(name "D11"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D11"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 0.0 0)
+				(length 2.54)
+				(name "D12"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D12"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 -5.08 0)
+				(length 2.54)
+				(name "A2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "A2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 -7.62 0)
+				(length 2.54)
+				(name "A3"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "A3"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 -10.16 0)
+				(length 2.54)
+				(name "A10"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "A10"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 -12.7 0)
+				(length 2.54)
+				(name "A11"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "A11"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 -15.24 0)
+				(length 2.54)
+				(name "D23"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D23"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 -17.78 0)
+				(length 2.54)
+				(name "D24"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D24"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 -22.86 0)
+				(length 2.54)
+				(name "A9"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "A9"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 -25.4 0)
+				(length 2.54)
+				(name "A12"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "A12"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 25.4 180)
+				(length 2.54)
+				(name "D13"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D13"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 22.86 180)
+				(length 2.54)
+				(name "D22"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D22"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 17.78 180)
+				(length 2.54)
+				(name "A0"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "A0"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 15.24 180)
+				(length 2.54)
+				(name "A1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "A1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 10.16 180)
+				(length 2.54)
+				(name "D44"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D44"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 7.62 180)
+				(length 2.54)
+				(name "D45"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D45"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 2.54 180)
+				(length 2.54)
+				(name "D18"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D18"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 0.0 180)
+				(length 2.54)
+				(name "D19"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D19"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 -5.08 180)
+				(length 2.54)
+				(name "D20"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D20"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 -7.62 180)
+				(length 2.54)
+				(name "D21"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "D21"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 -12.7 180)
+				(length 2.54)
+				(name "USB"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "USB"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 0.0 30.48 270)
+				(length 2.54)
+				(name "5V"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "5V"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 0.0 -30.48 90)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "MotorShield_V2"
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 1.016)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 0 16.51 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "Adafruit Motor Shield V2"
+			(at 0 -16.51 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" "PCA9685 + 2x TB6612, I2C 0x60, stacked on the Mega"
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(symbol "MotorShield_V2_0_1"
+			(rectangle
+				(start -11.43 15.24)
+				(end 11.43 -15.24)
+				(stroke (width 0.254) (type default))
+				(fill
+					(type background)
+				)
+			)
+		)
+		(symbol "MotorShield_V2_1_1"
+			(pin passive line
+				(at -13.97 12.7 0)
+				(length 2.54)
+				(name "SDA"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "SDA"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -13.97 10.16 0)
+				(length 2.54)
+				(name "SCL"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "SCL"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -13.97 5.08 0)
+				(length 2.54)
+				(name "VMOT+"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "VMOT+"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 12.7 180)
+				(length 2.54)
+				(name "M1A"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "M1A"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 10.16 180)
+				(length 2.54)
+				(name "M1B"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "M1B"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 5.08 180)
+				(length 2.54)
+				(name "M2A"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "M2A"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 2.54 180)
+				(length 2.54)
+				(name "M2B"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "M2B"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 -2.54 180)
+				(length 2.54)
+				(name "M3A"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "M3A"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 -5.08 180)
+				(length 2.54)
+				(name "M3B"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "M3B"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 -10.16 180)
+				(length 2.54)
+				(name "M4A"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "M4A"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 13.97 -12.7 180)
+				(length 2.54)
+				(name "M4B"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "M4B"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 0.0 17.78 270)
+				(length 2.54)
+				(name "5V"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "5V"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -2.54 -17.78 90)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 2.54 -17.78 90)
+				(length 2.54)
+				(name "VMOT-"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "VMOT-"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "DRV8871_Module"
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 1.016)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 0 7.62 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "Adafruit DRV8871 (3190)"
+			(at 0 -7.62 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" "Brushed DC driver breakout, VM 6.5-45 V, ~2.1 A limit (30k ILIM)"
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(symbol "DRV8871_Module_0_1"
+			(rectangle
+				(start -8.89 6.35)
+				(end 8.89 -6.35)
+				(stroke (width 0.254) (type default))
+				(fill
+					(type background)
+				)
+			)
+		)
+		(symbol "DRV8871_Module_1_1"
+			(pin passive line
+				(at -11.43 3.81 0)
+				(length 2.54)
+				(name "IN1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "IN1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -11.43 1.27 0)
+				(length 2.54)
+				(name "IN2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "IN2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 11.43 3.81 180)
+				(length 2.54)
+				(name "VM"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "VM"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 11.43 -1.27 180)
+				(length 2.54)
+				(name "OUT1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "OUT1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 11.43 -3.81 180)
+				(length 2.54)
+				(name "OUT2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "OUT2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -2.54 -8.89 90)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 2.54 -8.89 90)
+				(length 2.54)
+				(name "PGND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "PGND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "Relay_Module_1ch"
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 1.016)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 0 6.35 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1-ch relay module"
+			(at 0 -6.35 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" "5 V relay module, contacts > 3 A at 12 V DC"
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(symbol "Relay_Module_1ch_0_1"
+			(rectangle
+				(start -7.62 5.08)
+				(end 7.62 -5.08)
+				(stroke (width 0.254) (type default))
+				(fill
+					(type background)
+				)
+			)
+		)
+		(symbol "Relay_Module_1ch_1_1"
+			(pin passive line
+				(at -10.16 2.54 0)
+				(length 2.54)
+				(name "IN"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "IN"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 10.16 2.54 180)
+				(length 2.54)
+				(name "COM"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "COM"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 10.16 0.0 180)
+				(length 2.54)
+				(name "NO"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "NO"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 10.16 -2.54 180)
+				(length 2.54)
+				(name "NC"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "NC"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 0.0 7.62 270)
+				(length 2.54)
+				(name "VCC"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "VCC"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 0.0 -7.62 90)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "Relay_Module_2ch"
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 1.016)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 0 7.62 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "2-ch relay board (chain, today)"
+			(at 0 -7.62 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" "Existing v1 chain relays; internal contact wiring TBD"
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(symbol "Relay_Module_2ch_0_1"
+			(rectangle
+				(start -10.16 6.35)
+				(end 10.16 -6.35)
+				(stroke (width 0.254) (type default))
+				(fill
+					(type background)
+				)
+			)
+		)
+		(symbol "Relay_Module_2ch_1_1"
+			(pin passive line
+				(at -12.7 3.81 0)
+				(length 2.54)
+				(name "IN1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "IN1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -12.7 1.27 0)
+				(length 2.54)
+				(name "IN2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "IN2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 3.81 180)
+				(length 2.54)
+				(name "V+"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "V+"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 -1.27 180)
+				(length 2.54)
+				(name "MOT_A"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "MOT_A"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 12.7 -3.81 180)
+				(length 2.54)
+				(name "MOT_B"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "MOT_B"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 0.0 8.89 270)
+				(length 2.54)
+				(name "VCC"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "VCC"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -2.54 -8.89 90)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 2.54 -8.89 90)
+				(length 2.54)
+				(name "V-"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "V-"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "PSU_12V"
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 1.016)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 0 3.81 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "12 V PSU"
+			(at 0 -3.81 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" "Single 12 V supply, rating TBD"
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(symbol "PSU_12V_0_1"
+			(rectangle
+				(start -5.08 2.54)
+				(end 5.08 -2.54)
+				(stroke (width 0.254) (type default))
+				(fill
+					(type background)
+				)
+			)
+		)
+		(symbol "PSU_12V_1_1"
+			(pin passive line
+				(at 7.62 0.0 180)
+				(length 2.54)
+				(name "+V"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "+V"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 0.0 -5.08 90)
+				(length 2.54)
+				(name "-V"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "-V"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "ESP32_Link"
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 1.016)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 0 5.08 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "ESP32 (future, S1)"
+			(at 0 -5.08 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" "Future ESP32 bridge on Serial1 via level shifter"
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(symbol "ESP32_Link_0_1"
+			(rectangle
+				(start -7.62 3.81)
+				(end 7.62 -3.81)
+				(stroke (width 0.254) (type default))
+				(fill
+					(type background)
+				)
+			)
+		)
+		(symbol "ESP32_Link_1_1"
+			(pin passive line
+				(at -10.16 1.27 0)
+				(length 2.54)
+				(name "RX"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "RX"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -10.16 -1.27 0)
+				(length 2.54)
+				(name "TX"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "TX"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 0.0 -6.35 90)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "LevelShifter"
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 1.016)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 0 5.08 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "Level shifter 5V<->3V3 (future)"
+			(at 0 -5.08 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" "Bidirectional MOSFET level shifter, e.g. BSS138 type"
+			(at 0 0 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(symbol "LevelShifter_0_1"
+			(rectangle
+				(start -8.89 3.81)
+				(end 8.89 -3.81)
+				(stroke (width 0.254) (type default))
+				(fill
+					(type background)
+				)
+			)
+		)
+		(symbol "LevelShifter_1_1"
+			(pin passive line
+				(at -11.43 1.27 0)
+				(length 2.54)
+				(name "HV1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "HV1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -11.43 -1.27 0)
+				(length 2.54)
+				(name "HV2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "HV2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 11.43 1.27 180)
+				(length 2.54)
+				(name "LV1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "LV1"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 11.43 -1.27 180)
+				(length 2.54)
+				(name "LV2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "LV2"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at -2.54 6.35 270)
+				(length 2.54)
+				(name "HV"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "HV"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 2.54 6.35 270)
+				(length 2.54)
+				(name "LV"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "LV"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+			(pin passive line
+				(at 0.0 -6.35 90)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+				(number "GND"
+					(effects
+						(font (size 1.27 1.27))
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+)
