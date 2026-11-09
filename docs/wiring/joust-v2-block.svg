@@ -139,8 +139,8 @@
   <text x="1072" y="676" class="s">A12 safe-op jumper</text>
   <text x="1072" y="692" class="s">Panel: A2/A3 rotate CW/CCW, A10/A11 chain CW/CCW</text>
   <text x="1072" y="708" class="s">D23/D24 lances up/down (tentative, was A4/A5)</text>
-  <text x="1072" y="724" class="s">D13 -&gt; MOSFET Q1 -&gt; 12 V button LED (+12V_FUSED)</text>
-  <text x="1072" y="740" class="tbd">Q1 part no. and panel location TBD</text>
+  <text x="1072" y="724" class="s">D13 -&gt; 1k -&gt; TIP120 Q1 -&gt; 12 V LED (+12V_FUSED)</text>
+  <text x="1072" y="740" class="tbd">LED current limit and panel location TBD</text>
   <path d="M1060,670 H770" class="sig" marker-end="url(#a)" marker-start="url(#a)"/>
 
   <!-- ===== future ESP32 ===== -->

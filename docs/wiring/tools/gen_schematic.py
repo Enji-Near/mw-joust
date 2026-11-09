@@ -97,9 +97,6 @@ SYMBOLS = {
                                       P("IN1", "IN2"), P("V+", None, "MOT_A", "MOT_B"), 20.32,
                                       "Existing v1 chain relays; internal contact wiring TBD", ("VCC",), ("GND", "V-")),
     "PSU_12V": lambda: block("PSU_12V", "12 V PSU", [], P("+V"), 10.16, "Single 12 V supply, rating TBD", (), ("-V",)),
-    "MOSFET_Module": lambda: block("MOSFET_Module", "MOSFET switch (as Sawmill)", P("SIG"), P("LOAD-"), 20.32,
-                                   "Logic-level N-MOSFET switch, same part as the Sawmill LED; part number TBD",
-                                   (), ("GND",)),
     "ESP32_Link": lambda: block("ESP32_Link", "ESP32 (future, S1)", P("RX", "TX"), [], 15.24,
                                 "Future ESP32 bridge on Serial1 via level shifter", (), ("GND",)),
     "LevelShifter": lambda: block("LevelShifter", "Level shifter 5V<->3V3 (future)",
@@ -488,16 +485,18 @@ def build():
     jp = s.place("Connector_Generic:Conn_01x02", "JP1", "Safe-op jumper", 330.2, 287.02, ref_off=(-2.54, -5.08), val_off=(-7.62, 6.35))
     stub_label(s, jp.pin("1"), net("A12", "safe op"), "L", 7.62)
     stub_power(s, jp.pin("2"), "GND", "L", 7.62)
-    q1 = s.place(f"{LIBNAME}:MOSFET_Module", "Q1", "MOSFET switch (as Sawmill)", 322.58, 325.12,
-                 ref_off=(-10.16, -5.08), val_off=(-5.08, -5.08), fields={"Note": "Part number TBD; low-side assumed"})
-    d1 = s.place("Device:LED", "D1", "Start-button LED, 12 V", 345.44, 317.5, rot=90,
+    q1 = s.place("Transistor_BJT:TIP120", "Q1", "TIP120", 342.9, 325.12,
+                 ref_off=(5.08, -1.27), val_off=(5.08, 1.27), fields={"Digikey": "497-2539-5-ND"})
+    r1 = s.place("Device:R", "R1", "1k", 330.2, 325.12, rot=90, ref_off=(-1.27, -2.54), val_off=(-1.27, 2.54))
+    s.wire(r1.pin("2"), q1.pin("1"))
+    stub_label(s, r1.pin("1"), "D13_START_LED", "L", 5.08)
+    d1 = s.place("Device:LED", "D1", "Start-button LED, 12 V", 345.44, 312.42, rot=90,
                  ref_off=(-2.54, -1.27), val_off=(-2.54, -5.08))
-    stub_label(s, q1.pin("SIG"), "D13_START_LED", "L", 5.08)
-    s.wire(q1.pin("LOAD-"), (345.44, 325.12), d1.pin("1"))
+    s.wire(q1.pin("2"), d1.pin("1"))
     stub_label(s, d1.pin("2"), "+12V_FUSED", "U", 2.54)
-    stub_power(s, q1.pin("GND"), "GND", "D", 2.54)
+    stub_power(s, q1.pin("3"), "GND", "D", 1.27)
     s.text("Start LED: D13 HIGH = on (also onboard LED).\n12 V LED from +12V_FUSED, NOT +12V_SW:\nit must blink while motor power is cut.\n"
-           "Q1 GND to Mega GND. Gate pull-down: check\nthe module has one, else 10k gate to GND.\n"
+           "Q1 TIP120 low side; tab = collector: insulate\nif mounted on metal. LED current limit: TBD.\n"
            "Lance fault 500/500 ms, other 2000/2000 ms.", 284.48, 339.09)
     s.text("Lances up/down moved off A4/A5\n(removed) to D23/D24: tentative.", 284.48, 362.0)
 
@@ -524,7 +523,7 @@ def build():
     # ================= OPEN ITEMS
     s.text("OPEN ITEMS (owner):\n1. 12 V supply current rating; wire gauges.\n2. Physical location of panel, key, start "
            "button; connectors per harness.\n3. Does the shield tie A4/A5 to SDA/SCL? (continuity check, power off)\n"
-           "4. Relay board mounting and input polarity.\n5. Q1 MOSFET part number; LED terminals separate from switch.\n6. Chain relay board contact wiring.",
+           "4. Relay board mounting and input polarity.\n5. Start LED current (built-in limit?); LED terminals separate from switch.\n6. Chain relay board contact wiring.",
            368.3, 307.34, 1.5)
     return s
 
