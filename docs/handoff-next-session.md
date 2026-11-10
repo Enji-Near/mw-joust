@@ -1,4 +1,4 @@
-# Handoff: next Joust session (written 2026-11-08)
+# Handoff: next Joust session (updated 2026-11-09)
 
 Start the session in the Joust repo and say: "Read `docs/handoff-next-session.md` and continue."
 
@@ -19,6 +19,12 @@ Start the session in the Joust repo and say: "Read `docs/handoff-next-session.md
 - Checkpoint A done. The owner handed the Axis interface review to the tests.
 - Wiring diagram: separate session, using `docs/handoff-wiring-diagram.md`.
 
+## Done (2026-11-08/09)
+- Wiring drawings, draft 0.1, in `docs/wiring/`: block SVG, KiCad schematic + PDF, pin table, BoM. Open items 1-7 are in `docs/wiring/README.md`.
+- RC filter on all 10 limits: 1 kOhm pull-up, 1 kOhm series, 100 nF at the pin.
+- Start LED: 12 V from `+12V_FUSED`, switched low-side by a TIP120 (Q1) from D13 through 1 kOhm (R1). The owner has fitted the supply/motor caps and the relay.
+- Bring-up checklist with expected values: `Joust v2 Bring-up Checklist.md` (vault). Stages 0-3 need no new firmware and can happen before Task 5. Stage 3 flashes the v2 skeleton (ask first).
+
 ## Decisions made (details in `docs/decisions.md`)
 - **Hardware:**
   - Keep the lance motors and the Adafruit Motor Shield V2. Fix the switches with caps and code.
@@ -35,6 +41,7 @@ Start the session in the Joust repo and say: "Read `docs/handoff-next-session.md
 - **Calibration:** `config.h` defaults, plus an optional copy saved to EEPROM by the bench firmware.
 
 ## Open questions for the owner (ask these first)
+0. **Motor-power relay input polarity:** does D22 LOW or HIGH switch it on? Needed before Task 5. If LOW (most boards), add `MOTOR_POWER_ON_LEVEL` to `config.h` and write the OFF level before `pinMode(OUTPUT)`, as the chain relays do.
 1. **EEPROM wear, the first item to settle:** does ADR-013 survive? See the plan's Open questions 1 for the numbers. The owner wants it cut if there is any real chance of wear-out over 5+ years at hundreds of lance moves a day. Ask how many shows run per day.
 2. ADR-013 refinement: also record MOVING_TO_x at move start, so a mid-move power cut is recognised. OK?
 3. Boot probe (owner decision, 2026-11-08):
@@ -55,7 +62,10 @@ Start the session in the Joust repo and say: "Read `docs/handoff-next-session.md
 - Run `pio run -e joust -e bench` and `pio test -e native` after every change; report flash and RAM.
 - Ask the owner before flashing. Task 5 is the first firmware that moves motors.
 
-## Owner's hardware in progress (`Joust v2 Todo.md` H1-H3)
-- Caps: 0.1 uF across each motor. 330 uF + 0.1 uF at the supply input. 100 uF + 0.1 uF at the shield terminal and the DRV8871.
-- Lance input filter: 1 kOhm pull-up, 1 kOhm series, 100 nF.
-- Signal line repairs, brush checks, the merged supply, and the relay.
+## Loose ends (offered, not yet done)
+- Vault todo H2 "meter each lance switch, expect near 0 ohm" is wrong with the filter fitted: it reads about 1 kOhm from the pin. Replace it with the checklist Stage 1 voltage check (closed < 0.25 V). Offered; owner hasn't said yes.
+- Add a todo item for building the TIP120 LED circuit. Offered; owner hasn't said yes.
+- `config.h` `PIN_LED` comment: say it drives the start LED via the TIP120. Do it with Task 5.
+- Panel buttons: D23/D24 rewire still open (checklist Stage 4 needs it).
+- Update the wiring drawings with the answers from the checklist's Stage 0-2 readings.
+- Task 11: client operations manual, still pending.
